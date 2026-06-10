@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="健康管理">
+<meta name="theme-color" content="#0f0f0f">
+<title>健康管理</title>
+<style>
+:root {
+  --bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#252525;--bg4:#2e2e2e;
+  --text:#f0f0f0;--text2:#999;--text3:#666;
+  --accent:#7F77DD;--accent2:#1D9E75;--amber:#EF9F27;--blue:#378ADD;--red:#E24B4A;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --radius:16px;--radius-sm:10px;--safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica Neue',sans-serif;overscroll-behavior:none}
+body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative;min-height:100dvh}
+.topbar{padding:52px 20px 16px;display:flex;align-items:flex-end;justify-content:space-between;flex-shrink:0}
+.topbar-title{font-size:28px;font-weight:700;letter-spacing:-0.5px}
+.date-badge{font-size:13px;color:var(--text2);background:var(--bg3);padding:5px 10px;border-radius:20px}
+.tab-bar{display:flex;background:var(--bg2);border-top:0.5px solid var(--border);padding-bottom:calc(8px + var(--safe-bottom));flex-shrink:0}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 6px;cursor:pointer;color:var(--text3);font-size:10px;border:none;background:transparent}
+.tab-item.active{color:var(--accent)}
+.tab-item svg{width:24px;height:24px;stroke-width:1.8}
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 24px}
+.page{display:none}.page.active{display:block}
+.macro-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.macro-card{background:var(--bg2);border-radius:var(--radius-sm);padding:14px}
+.macro-label{font-size:11px;color:var(--text2);margin-bottom:6px}
+.macro-val{font-size:22px;font-weight:700}
+.macro-target{font-size:12px;color:var(--text3);margin-top:2px}
+.macro-bar{height:4px;background:var(--bg4);border-radius:2px;margin-top:8px;overflow:hidden}
+.macro-bar-fill{height:100%;border-radius:2px;transition:width .4s}
+.cal-ring-wrap{background:var(--bg2);border-radius:var(--radius);padding:20px;margin-bottom:12px;display:flex;align-items:center;gap:20px}
+.ring-labels{flex:1}
+.ring-cal{font-size:32px;font-weight:700}
+.ring-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.ring-remaining{font-size:13px;color:var(--text2);margin-top:8px}
+.ring-remaining span{color:var(--text);font-weight:600}
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin:20px 0 12px}
+.sec-title{font-size:17px;font-weight:600}
+.meal-card{background:var(--bg2);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.meal-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.meal-info{flex:1;min-width:0}
+.meal-name{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meal-meta{font-size:12px;color:var(--text2);margin-top:2px}
+.meal-kcal{font-size:15px;font-weight:600;flex-shrink:0}
+.del-btn-small{background:transparent;border:none;color:var(--text3);cursor:pointer;padding:4px}
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none}
+.sheet-overlay.open{display:flex;align-items:flex-end}
+.sheet{background:var(--bg2);border-radius:24px 24px 0 0;width:100%;max-width:480px;margin:0 auto;padding:12px 20px calc(20px + var(--safe-bottom));max-height:90dvh;overflow-y:auto}
+.sheet-handle{width:36px;height:4px;background:var(--bg4);border-radius:2px;margin:0 auto 20px}
+.sheet-title{font-size:18px;font-weight:700;margin-bottom:20px}
+.field{margin-bottom:14px}
+.field label{font-size:12px;color:var(--text2);display:block;margin-bottom:6px}
+.field input,.field select{width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:12px 14px;font-size:16px;color:var(--text);appearance:none;-webkit-appearance:none}
+.field input::placeholder{color:var(--text3)}
+.field select option{background:var(--bg3)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-primary{width:100%;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);padding:15px;font-size:16px;font-weight:600;cursor:pointer;margin-top:6px}
+.btn-secondary{width:100%;background:var(--bg3);color:var(--text2);border:none;border-radius:var(--radius-sm);padding:14px;font-size:15px;cursor:pointer;margin-top:8px}
+.hist-section{margin-bottom:16px}
+.hist-label{font-size:12px;color:var(--text2);margin-bottom:8px}
+.hist-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.hist-scroll::-webkit-scrollbar{display:none}
+.hist-chip{background:var(--bg3);border:0.5px solid var(--border2);border-radius:20px;padding:7px 14px;white-space:nowrap;font-size:13px;cursor:pointer;flex-shrink:0;color:var(--text)}
+.hist-chip:active{background:var(--bg4)}
+.body-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.body-card{background:var(--bg2);border-radius:var(--radius-sm);padding:16px;text-align:center}
+.body-card-val{font-size:30px;font-weight:700;margin-bottom:2px}
+.body-card-label{font-size:12px;color:var(--text2)}
+.body-card-sub{font-size:12px;color:var(--text3);margin-top:4px}
+.chart-card{background:var(--bg2);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.chart-card-title{font-size:14px;color:var(--text2);margin-bottom:12px}
+.chart-wrap{position:relative;width:100%;height:160px}
+.settings-section{background:var(--bg2);border-radius:var(--radius);margin-bottom:12px;overflow:hidden}
+.settings-row{display:flex;align-items:center;padding:14px 16px;border-bottom:0.5px solid var(--border);gap:12px}
+.settings-row:last-child{border-bottom:none}
+.settings-row-label{flex:1;font-size:15px}
+.settings-row-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.settings-row input{width:90px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;padding:8px 10px;font-size:15px;color:var(--text);text-align:right}
+.settings-section-title{font-size:12px;color:var(--text3);padding:16px 16px 6px;text-transform:uppercase;letter-spacing:0.5px}
+.toast{position:fixed;bottom:calc(80px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:0.5px solid var(--border2);border-radius:20px;padding:10px 18px;font-size:14px;white-space:nowrap;opacity:0;transition:opacity .2s,transform .2s;z-index:200;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.dot-morning{background:#EF9F27}.dot-lunch{background:#378ADD}.dot-dinner{background:#7F77DD}.dot-snack{background:#1D9E75}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text3);font-size:14px;line-height:1.8}
+.empty-icon{font-size:36px;margin-bottom:8px}
+
+/* Goal page */
+.goal-banner{background:linear-gradient(135deg,#2a2060 0%,#1a3a2a 100%);border-radius:var(--radius);padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.goal-banner-bg{position:absolute;inset:0;background:var(--bg2);z-index:0}
+.goal-banner-inner{position:relative;z-index:1}
+.goal-banner-tag{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px}
+.goal-banner-title{font-size:20px;font-weight:700;margin-bottom:4px}
+.goal-banner-sub{font-size:13px;color:var(--text2)}
+.goal-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.goal-result-card{background:var(--bg2);border-radius:var(--radius-sm);padding:14px}
+.goal-result-label{font-size:11px;color:var(--text2);margin-bottom:6px}
+.goal-result-val{font-size:20px;font-weight:700}
+.goal-result-unit{font-size:12px;font-weight:400;color:var(--text2);margin-left:2px}
+.goal-progress-wrap{background:var(--bg2);border-radius:var(--radius);padding:16px;margin-bottom:16px}
+.goal-prog-row{margin-bottom:10px}
+.goal-prog-row:last-child{margin-bottom:0}
+.goal-prog-label{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:5px}
+.goal-prog-bar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.goal-prog-fill{height:100%;border-radius:3px}
+.info-card{background:var(--bg2);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border)}
+.info-row:last-child{border-bottom:none}
+.info-label{font-size:13px;color:var(--text2)}
+.info-val{font-size:14px;font-weight:600}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge-green{background:rgba(29,158,117,0.15);color:#1D9E75}
+.badge-amber{background:rgba(239,159,39,0.15);color:#EF9F27}
+.badge-red{background:rgba(226,75,74,0.15);color:#E24B4A}
+.badge-purple{background:rgba(127,119,221,0.15);color:#7F77DD}
+.goal-empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:14px;line-height:1.9}
+.step-indicator{display:flex;align-items:center;gap:8px;margin-bottom:24px}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--bg4)}
+.step-dot.active{background:var(--accent);width:24px;border-radius:4px}
+.step-dot.done{background:var(--accent2)}
+.goal-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.goal-type-card{background:var(--bg3);border:1.5px solid transparent;border-radius:var(--radius-sm);padding:16px;cursor:pointer;text-align:center}
+.goal-type-card.selected{border-color:var(--accent)}
+.goal-type-icon{font-size:28px;margin-bottom:8px}
+.goal-type-label{font-size:14px;font-weight:600}
+.goal-type-sub{font-size:11px;color:var(--text2);margin-top:4px}
+.section-divider{height:0.5px;background:var(--border);margin:20px 0}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title" id="pageTitle">食事</div>
+  <div class="date-badge" id="dateBadge"></div>
+</div>
+
+<div class="content">
+
+  <!-- 食事ページ -->
+  <div class="page active" id="page-food">
+    <div class="cal-ring-wrap">
+      <div class="ring-labels">
+        <div class="ring-cal"><span id="sumCal">0</span> <span style="font-size:16px;font-weight:400;color:var(--text2)">kcal</span></div>
+        <div class="ring-sub">摂取カロリー</div>
+        <div class="ring-remaining">目標まで <span id="calRemain">—</span> kcal</div>
+      </div>
+      <svg viewBox="0 0 80 80" width="80" height="80">
+        <circle cx="40" cy="40" r="34" fill="none" stroke="var(--bg4)" stroke-width="7"/>
+        <circle cx="40" cy="40" r="34" fill="none" stroke="var(--accent)" stroke-width="7"
+          stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="213.6"
+          id="calRing" transform="rotate(-90 40 40)" style="transition:stroke-dashoffset .5s"/>
+      </svg>
+    </div>
+    <div class="macro-grid">
+      <div class="macro-card">
+        <div class="macro-label">タンパク質</div>
+        <div class="macro-val" style="color:var(--accent2)"><span id="sumP">0</span><span style="font-size:14px;font-weight:400">g</span></div>
+        <div class="macro-target">/ <span id="dispTgtP">—</span>g</div>
+        <div class="macro-bar"><div class="macro-bar-fill" id="barP" style="background:var(--accent2);width:0%"></div></div>
+      </div>
+      <div class="macro-card">
+        <div class="macro-label">脂質</div>
+        <div class="macro-val" style="color:var(--amber)"><span id="sumF">0</span><span style="font-size:14px;font-weight:400">g</span></div>
+        <div class="macro-target">/ <span id="dispTgtF">—</span>g</div>
+        <div class="macro-bar"><div class="macro-bar-fill" id="barF" style="background:var(--amber);width:0%"></div></div>
+      </div>
+      <div class="macro-card">
+        <div class="macro-label">炭水化物</div>
+        <div class="macro-val" style="color:var(--blue)"><span id="sumC">0</span><span style="font-size:14px;font-weight:400">g</span></div>
+        <div class="macro-target">/ <span id="dispTgtC">—</span>g</div>
+        <div class="macro-bar"><div class="macro-bar-fill" id="barC" style="background:var(--blue);width:0%"></div></div>
+      </div>
+      <div class="macro-card" style="display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer" onclick="openSheet('meal')">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <div style="font-size:13px;color:var(--accent);margin-top:6px">食事を追加</div>
+      </div>
+    </div>
+    <div class="sec-header">
+      <div class="sec-title">今日の食事</div>
+    </div>
+    <div id="mealList"></div>
+  </div>
+
+  <!-- 体重ページ -->
+  <div class="page" id="page-body">
+    <div class="body-summary">
+      <div class="body-card">
+        <div class="body-card-val" style="color:var(--accent)" id="latestWeight">—</div>
+        <div class="body-card-label">体重 kg</div>
+        <div class="body-card-sub" id="weightDiff"></div>
+      </div>
+      <div class="body-card">
+        <div class="body-card-val" style="color:var(--accent2)" id="latestFat">—</div>
+        <div class="body-card-label">体脂肪率 %</div>
+        <div class="body-card-sub" id="fatDiff"></div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px">
+      <button class="btn-primary" style="border-radius:var(--radius-sm)" onclick="openSheet('body')">+ 体重・体脂肪を記録</button>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-title">体重の推移 (kg)</div>
+      <div class="chart-wrap"><canvas id="weightChart" role="img" aria-label="体重推移グラフ"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-title">体脂肪率の推移 (%)</div>
+      <div class="chart-wrap"><canvas id="fatChart" role="img" aria-label="体脂肪率推移グラフ"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 目標ページ -->
+  <div class="page" id="page-goal">
+    <div id="goalContent"></div>
+  </div>
+
+  <!-- 設定ページ -->
+  <div class="page" id="page-settings">
+    <div class="settings-section-title">1日の目標（手動設定）</div>
+    <div class="settings-section" id="manualTargetSection">
+      <div class="settings-row" style="padding:10px 16px">
+        <div class="settings-row-label" style="font-size:13px;color:var(--text2)">目標設定から自動計算された値が使われます。手動で上書きもできます。</div>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-row-label">カロリー</div></div>
+        <input type="number" id="stgCal" value="" min="0" placeholder="自動" onchange="saveManualTargets()"> <span style="font-size:13px;color:var(--text2)">kcal</span>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-row-label">タンパク質</div></div>
+        <input type="number" id="stgP" value="" min="0" placeholder="自動" onchange="saveManualTargets()"> <span style="font-size:13px;color:var(--text2)">g</span>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-row-label">脂質</div></div>
+        <input type="number" id="stgF" value="" min="0" placeholder="自動" onchange="saveManualTargets()"> <span style="font-size:13px;color:var(--text2)">g</span>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-row-label">炭水化物</div></div>
+        <input type="number" id="stgC" value="" min="0" placeholder="自動" onchange="saveManualTargets()"> <span style="font-size:13px;color:var(--text2)">g</span>
+      </div>
+    </div>
+    <div class="settings-section-title">データ</div>
+    <div class="settings-section">
+      <div class="settings-row" onclick="clearToday()" style="cursor:pointer">
+        <div><div class="settings-row-label" style="color:var(--red)">今日の食事記録を削除</div></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="settings-row" onclick="clearAll()" style="cursor:pointer">
+        <div><div class="settings-row-label" style="color:var(--red)">すべてのデータを削除</div></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+    <div class="settings-section-title">アプリについて</div>
+    <div class="settings-section">
+      <div class="settings-row"><div><div class="settings-row-label">バージョン</div><div class="settings-row-sub">腹筋トラッカー v2.0</div></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Tab Bar -->
+<nav class="tab-bar">
+  <button class="tab-item active" onclick="switchPage('food',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+    食事
+  </button>
+  <button class="tab-item" onclick="switchPage('body',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4a4 4 0 1 1-8 0 4 4 0 0 1 8 0"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+    体重
+  </button>
+  <button class="tab-item" onclick="switchPage('goal',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+    目標
+  </button>
+  <button class="tab-item" onclick="switchPage('settings',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    設定
+  </button>
+</nav>
+
+<!-- 食事追加シート -->
+<div class="sheet-overlay" id="mealSheet" onclick="closeSheet('meal')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">食事を追加</div>
+    <div class="hist-section" id="histSection" style="display:none">
+      <div class="hist-label">最近の食事</div>
+      <div class="hist-scroll" id="histScroll"></div>
+    </div>
+    <div class="field">
+      <label>食品名</label>
+      <input type="text" id="inName" placeholder="例: 鶏むね肉 100g" oninput="onNameInput(this.value)">
+    </div>
+    <div class="field-row">
+      <div class="field"><label>タイミング</label>
+        <select id="inTime"><option value="朝食">朝食</option><option value="昼食">昼食</option><option value="夕食">夕食</option><option value="間食">間食</option></select>
+      </div>
+      <div class="field"><label>カロリー (kcal)</label><input type="number" id="inCal" placeholder="0" min="0" inputmode="decimal"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>タンパク質 (g)</label><input type="number" id="inP" placeholder="0" min="0" step="0.1" inputmode="decimal"></div>
+      <div class="field"><label>脂質 (g)</label><input type="number" id="inF" placeholder="0" min="0" step="0.1" inputmode="decimal"></div>
+    </div>
+    <div class="field"><label>炭水化物 (g)</label><input type="number" id="inC" placeholder="0" min="0" step="0.1" inputmode="decimal" style="width:calc(50% - 5px)"></div>
+    <button class="btn-primary" onclick="addMeal()">追加する</button>
+    <button class="btn-secondary" onclick="closeSheet('meal')">キャンセル</button>
+  </div>
+</div>
+
+<!-- 体重記録シート -->
+<div class="sheet-overlay" id="bodySheet" onclick="closeSheet('body')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">体重・体脂肪を記録</div>
+    <div class="field"><label>日付</label><input type="date" id="inDate"></div>
+    <div class="field-row">
+      <div class="field"><label>体重 (kg)</label><input type="number" id="inWeight" placeholder="70.0" min="0" step="0.1" inputmode="decimal"></div>
+      <div class="field"><label>体脂肪率 (%)</label><input type="number" id="inBodyFat" placeholder="20.0" min="0" step="0.1" inputmode="decimal"></div>
+    </div>
+    <button class="btn-primary" onclick="addBodyRecord()">記録する</button>
+    <button class="btn-secondary" onclick="closeSheet('body')">キャンセル</button>
+  </div>
+</div>
+
+<!-- 目標設定シート（ウィザード形式） -->
+<div class="sheet-overlay" id="goalSheet" onclick="closeSheet('goal')">
+  <div class="sheet" onclick="event.stopPropagation()" id="goalSheetInner">
+    <div class="sheet-handle"></div>
+    <div id="goalWizard"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const pageTitles = {food:'食事',body:'体重・体脂肪',goal:'目標',settings:'設定'};
+const dotClass = {'朝食':'dot-morning','昼食':'dot-lunch','夕食':'dot-dinner','間食':'dot-snack'};
+
+let meals=[], foodHistory=[], bodyRecords=[];
+let targets = {cal:0,p:0,f:0,c:0}; // 0 = not set
+let manualTargets = {cal:null,p:null,f:null,c:null};
+let goalData = null; // saved goal config
+let goalResult = null; // calculated targets
+let weightChart, fatChart;
+let wizardStep = 1;
+let wizardState = {};
+
+// ── Storage ──────────────────────────────────────────────
+function load() {
+  try { meals = JSON.parse(localStorage.getItem('meals_today')||'[]'); } catch(e){meals=[];}
+  try { foodHistory = JSON.parse(localStorage.getItem('food_history')||'[]'); } catch(e){foodHistory=[];}
+  try { bodyRecords = JSON.parse(localStorage.getItem('body_records')||'[]'); } catch(e){bodyRecords=[];}
+  try { const t=JSON.parse(localStorage.getItem('manual_targets')||'null'); if(t) manualTargets=t; } catch(e){}
+  try { goalData=JSON.parse(localStorage.getItem('goal_data')||'null'); } catch(e){}
+  checkDayReset();
+  if (goalData) goalResult = calcGoalTargets(goalData);
+  applyTargets();
+}
+function checkDayReset() {
+  const today = new Date().toDateString();
+  if (localStorage.getItem('last_date') !== today) {
+    meals=[]; localStorage.setItem('meals_today','[]'); localStorage.setItem('last_date',today);
+  }
+}
+function save(){ localStorage.setItem('meals_today',JSON.stringify(meals)); }
+function saveHistory(){ localStorage.setItem('food_history',JSON.stringify(foodHistory)); }
+function saveBodyRecords(){ localStorage.setItem('body_records',JSON.stringify(bodyRecords)); }
+function saveManualTargets() {
+  manualTargets.cal = document.getElementById('stgCal').value ? parseInt(document.getElementById('stgCal').value) : null;
+  manualTargets.p   = document.getElementById('stgP').value   ? parseInt(document.getElementById('stgP').value)   : null;
+  manualTargets.f   = document.getElementById('stgF').value   ? parseInt(document.getElementById('stgF').value)   : null;
+  manualTargets.c   = document.getElementById('stgC').value   ? parseInt(document.getElementById('stgC').value)   : null;
+  localStorage.setItem('manual_targets',JSON.stringify(manualTargets));
+  applyTargets();
+  showToast('設定を保存しました');
+}
+
+// ── Targets ───────────────────────────────────────────────
+function applyTargets() {
+  // Priority: manual override > goal calc > defaults
+  const base = goalResult || {cal:2000,p:150,f:60,c:200};
+  targets.cal = manualTargets.cal ?? base.cal;
+  targets.p   = manualTargets.p   ?? base.p;
+  targets.f   = manualTargets.f   ?? base.f;
+  targets.c   = manualTargets.c   ?? base.c;
+  ['P','F','C'].forEach(k => {
+    const el = document.getElementById('dispTgt'+k);
+    if(el) el.textContent = targets[k.toLowerCase()];
+  });
+  updateSummary();
+}
+
+// ── Goal calculation ──────────────────────────────────────
+/*
+  Uses Harris-Benedict BMR + activity multiplier = TDEE
+  Calorie deficit = (fat to lose in kg * 7700) / days
+  Keeps deficit within safe range (max 1000 kcal/day, min 1200 kcal intake)
+  Protein: 2.2g per kg of lean body mass (preserve muscle)
+  Fat: 25% of total calories
+  Carbs: remainder
+*/
+function calcGoalTargets(g) {
+  const { sex, age, height, weight, fat, targetWeight, targetFat, weeks, activityLevel } = g;
+  const currentFatKg = weight * (fat/100);
+  const lbm = weight - currentFatKg; // lean body mass
+
+  // BMR (Harris-Benedict revised)
+  let bmr;
+  if (sex === 'male') bmr = 88.362 + 13.397*weight + 4.799*height - 5.677*age;
+  else                bmr = 447.593 + 9.247*weight  + 3.098*height - 4.330*age;
+
+  const actMult = {sedentary:1.2, light:1.375, moderate:1.55, active:1.725, veryActive:1.9};
+  const tdee = Math.round(bmr * (actMult[activityLevel]||1.55));
+
+  // Target values
+  const tgtWeight = targetWeight || weight;
+  const tgtFat    = targetFat    || fat;
+  const tgtFatKg  = tgtWeight * (tgtFat/100);
+  const fatToLose = Math.max(0, currentFatKg - tgtFatKg); // kg of fat to lose
+
+  const days = weeks * 7;
+  const totalDeficit = fatToLose * 7700; // kcal
+  let dailyDeficit = days > 0 ? Math.round(totalDeficit / days) : 0;
+
+  // Safety clamp
+  dailyDeficit = Math.min(dailyDeficit, 1000);
+  let targetCal = Math.max(1200, tdee - dailyDeficit);
+
+  // Macros
+  const proteinG = Math.round(lbm * 2.2);
+  const proteinCal = proteinG * 4;
+  const fatCal = Math.round(targetCal * 0.25);
+  const fatG = Math.round(fatCal / 9);
+  const carbCal = Math.max(0, targetCal - proteinCal - fatCal);
+  const carbG = Math.round(carbCal / 4);
+
+  return {
+    cal: Math.round(targetCal),
+    p: proteinG,
+    f: fatG,
+    c: carbG,
+    tdee,
+    dailyDeficit: Math.round(dailyDeficit),
+    fatToLose: Math.round(fatToLose*10)/10,
+    lbm: Math.round(lbm*10)/10,
+  };
+}
+
+// ── Page switching ────────────────────────────────────────
+function switchPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[name];
+  if (name==='body') setTimeout(renderCharts,50);
+  if (name==='goal') renderGoalPage();
+}
+
+// ── Sheets ────────────────────────────────────────────────
+function openSheet(type) {
+  if (type==='meal') {
+    ['inName','inCal','inP','inF','inC'].forEach(id=>document.getElementById(id).value='');
+    renderHistChips(); document.getElementById('mealSheet').classList.add('open');
+    setTimeout(()=>document.getElementById('inName').focus(),300);
+  } else if (type==='body') {
+    document.getElementById('inDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('inWeight').value=''; document.getElementById('inBodyFat').value='';
+    document.getElementById('bodySheet').classList.add('open');
+  } else if (type==='goal') {
+    wizardStep=1; wizardState={};
+    renderWizard();
+    document.getElementById('goalSheet').classList.add('open');
+  }
+}
+function closeSheet(type) { document.getElementById(type+'Sheet').classList.remove('open'); }
+
+// ── History chips ─────────────────────────────────────────
+function renderHistChips() {
+  const sec=document.getElementById('histSection'), scroll=document.getElementById('histScroll');
+  if(foodHistory.length===0){sec.style.display='none';return;}
+  sec.style.display='block';
+  scroll.innerHTML=foodHistory.slice(0,12).map((f,i)=>`<div class="hist-chip" onclick="selectHist(${i})">${f.name}</div>`).join('');
+}
+function selectHist(i) {
+  const f=foodHistory[i];
+  document.getElementById('inName').value=f.name;
+  document.getElementById('inCal').value=f.cal;
+  document.getElementById('inP').value=f.p;
+  document.getElementById('inF').value=f.f;
+  document.getElementById('inC').value=f.c;
+}
+function onNameInput(val) {
+  const sec=document.getElementById('histSection'),scroll=document.getElementById('histScroll');
+  const filtered=val?foodHistory.filter(f=>f.name.includes(val)):foodHistory;
+  if(filtered.length===0){sec.style.display='none';return;}
+  sec.style.display='block';
+  scroll.innerHTML=filtered.slice(0,12).map(f=>{const i=foodHistory.indexOf(f);return`<div class="hist-chip" onclick="selectHist(${i})">${f.name}</div>`;}).join('');
+}
+
+// ── Meals ─────────────────────────────────────────────────
+function addMeal() {
+  const name=document.getElementById('inName').value.trim();
+  if(!name){showToast('食品名を入力してください');return;}
+  const meal={id:Date.now(),name,time:document.getElementById('inTime').value,cal:parseFloat(document.getElementById('inCal').value)||0,p:parseFloat(document.getElementById('inP').value)||0,f:parseFloat(document.getElementById('inF').value)||0,c:parseFloat(document.getElementById('inC').value)||0};
+  meals.push(meal);
+  if(!foodHistory.find(h=>h.name===name)){foodHistory.unshift({name,cal:meal.cal,p:meal.p,f:meal.f,c:meal.c});if(foodHistory.length>50)foodHistory.pop();saveHistory();}
+  save(); closeSheet('meal'); renderMeals(); updateSummary(); showToast('追加しました');
+}
+function deleteMeal(id){meals=meals.filter(m=>m.id!==id);save();renderMeals();updateSummary();}
+function renderMeals() {
+  const list=document.getElementById('mealList');
+  if(meals.length===0){list.innerHTML='<div class="empty-state"><div class="empty-icon">🍽</div>今日の食事を記録しよう</div>';return;}
+  list.innerHTML=meals.map(m=>`<div class="meal-card"><div class="meal-dot ${dotClass[m.time]||'dot-snack'}"></div><div class="meal-info"><div class="meal-name">${m.name}</div><div class="meal-meta">${m.time}　P ${m.p}g · F ${m.f}g · C ${m.c}g</div></div><div class="meal-kcal">${m.cal}<span style="font-size:11px;color:var(--text2)">kcal</span></div><button class="del-btn-small" onclick="deleteMeal(${m.id})" aria-label="削除"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg></button></div>`).join('');
+}
+function updateSummary() {
+  const tot=meals.reduce((a,m)=>({cal:a.cal+m.cal,p:a.p+m.p,f:a.f+m.f,c:a.c+m.c}),{cal:0,p:0,f:0,c:0});
+  document.getElementById('sumCal').textContent=Math.round(tot.cal);
+  document.getElementById('sumP').textContent=Math.round(tot.p);
+  document.getElementById('sumF').textContent=Math.round(tot.f);
+  document.getElementById('sumC').textContent=Math.round(tot.c);
+  const remain=Math.max(0,targets.cal-Math.round(tot.cal));
+  document.getElementById('calRemain').textContent=targets.cal?remain:'—';
+  const calPct=targets.cal?Math.min(1,tot.cal/targets.cal):0;
+  document.getElementById('calRing').setAttribute('stroke-dashoffset',(213.6*(1-calPct)).toFixed(1));
+  [['barP',tot.p,targets.p],['barF',tot.f,targets.f],['barC',tot.c,targets.c]].forEach(([id,v,t])=>{
+    document.getElementById(id).style.width=(t?Math.min(100,Math.round(v/t*100)):0)+'%';
+  });
+  ['P','F','C'].forEach(k=>{const el=document.getElementById('dispTgt'+k);if(el)el.textContent=targets[k.toLowerCase()]||'—';});
+}
+
+// ── Body records ──────────────────────────────────────────
+function addBodyRecord() {
+  const date=document.getElementById('inDate').value;
+  const weight=parseFloat(document.getElementById('inWeight').value);
+  const fat=parseFloat(document.getElementById('inBodyFat').value);
+  if(!date){showToast('日付を選択してください');return;}
+  if(isNaN(weight)&&isNaN(fat)){showToast('体重か体脂肪率を入力してください');return;}
+  const existing=bodyRecords.find(r=>r.date===date);
+  if(existing){if(!isNaN(weight))existing.weight=weight;if(!isNaN(fat))existing.fat=fat;}
+  else{bodyRecords.push({date,weight:isNaN(weight)?null:weight,fat:isNaN(fat)?null:fat});bodyRecords.sort((a,b)=>a.date.localeCompare(b.date));}
+  saveBodyRecords(); updateBodyStats(); closeSheet('body'); renderCharts(); showToast('記録しました');
+}
+function updateBodyStats() {
+  const ws=bodyRecords.filter(r=>r.weight!==null),fs=bodyRecords.filter(r=>r.fat!==null);
+  if(ws.length>0){
+    document.getElementById('latestWeight').textContent=ws[ws.length-1].weight.toFixed(1);
+    if(ws.length>1){const d=(ws[ws.length-1].weight-ws[ws.length-2].weight).toFixed(1);document.getElementById('weightDiff').textContent=(d>0?'▲':'▼')+Math.abs(d)+' kg';document.getElementById('weightDiff').style.color=d>0?'#E24B4A':'#1D9E75';}
+  }
+  if(fs.length>0){
+    document.getElementById('latestFat').textContent=fs[fs.length-1].fat.toFixed(1);
+    if(fs.length>1){const d=(fs[fs.length-1].fat-fs[fs.length-2].fat).toFixed(1);document.getElementById('fatDiff').textContent=(d>0?'▲':'▼')+Math.abs(d)+' %';document.getElementById('fatDiff').style.color=d>0?'#E24B4A':'#1D9E75';}
+  }
+}
+function renderCharts() {
+  const labels=bodyRecords.map(r=>r.date.slice(5));
+  const wData=bodyRecords.map(r=>r.weight),fData=bodyRecords.map(r=>r.fat);
+  const baseOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#666',font:{size:10},maxTicksLimit:6,autoSkip:true},grid:{color:'rgba(255,255,255,0.05)'},border:{color:'rgba(255,255,255,0.1)'}},y:{ticks:{color:'#666',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'},border:{color:'rgba(255,255,255,0.1)'}}},elements:{point:{radius:4,hoverRadius:6}}};
+  if(weightChart)weightChart.destroy();
+  weightChart=new Chart(document.getElementById('weightChart'),{type:'line',data:{labels,datasets:[{data:wData,borderColor:'#7F77DD',backgroundColor:'rgba(127,119,221,0.1)',fill:true,tension:0.4,spanGaps:true,pointBackgroundColor:'#7F77DD',borderWidth:2,pointStyle:'circle'}]},options:{...baseOpts,plugins:{...baseOpts.plugins,tooltip:{callbacks:{label:c=>c.parsed.y!==null?c.parsed.y.toFixed(1)+' kg':''}}}}});
+  if(fatChart)fatChart.destroy();
+  fatChart=new Chart(document.getElementById('fatChart'),{type:'line',data:{labels,datasets:[{data:fData,borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,0.1)',fill:true,tension:0.4,spanGaps:true,pointBackgroundColor:'#1D9E75',borderWidth:2,pointStyle:'circle',borderDash:[4,3]}]},options:{...baseOpts,plugins:{...baseOpts.plugins,tooltip:{callbacks:{label:c=>c.parsed.y!==null?c.parsed.y.toFixed(1)+' %':''}}}}});
+}
+
+// ── Goal Wizard ───────────────────────────────────────────
+const activityLabels={sedentary:'ほぼ運動なし',light:'週1〜2回',moderate:'週3〜4回',active:'週5〜6回',veryActive:'毎日激しく'};
+
+function renderWizard() {
+  const el=document.getElementById('goalWizard');
+  const steps=['基本情報','目標設定','期間・活動量'];
+  const stepDots=steps.map((_,i)=>`<div class="step-dot ${i+1===wizardStep?'active':i+1<wizardStep?'done':''}"></div>`).join('');
+
+  if(wizardStep===1) {
+    el.innerHTML=`
+      <div class="step-indicator">${stepDots}</div>
+      <div class="sheet-title">基本情報を入力</div>
+      <div class="field-row">
+        <div class="field"><label>性別</label>
+          <select id="wSex"><option value="male">男性</option><option value="female">女性</option></select>
+        </div>
+        <div class="field"><label>年齢</label><input type="number" id="wAge" placeholder="22" min="10" max="99" inputmode="numeric" value="${wizardState.age||''}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>身長 (cm)</label><input type="number" id="wHeight" placeholder="170" min="100" max="250" inputmode="decimal" value="${wizardState.height||''}"></div>
+        <div class="field"><label>体重 (kg)</label><input type="number" id="wWeight" placeholder="70.0" min="30" step="0.1" inputmode="decimal" value="${wizardState.weight||''}"></div>
+      </div>
+      <div class="field"><label>体脂肪率 (%)</label><input type="number" id="wFat" placeholder="20.0" min="3" max="60" step="0.1" inputmode="decimal" style="width:calc(50% - 5px)" value="${wizardState.fat||''}"></div>
+      <button class="btn-primary" onclick="wizardNext1()">次へ →</button>
+      <button class="btn-secondary" onclick="closeSheet('goal')">キャンセル</button>`;
+    if(wizardState.sex) document.getElementById('wSex').value=wizardState.sex;
+  } else if(wizardStep===2) {
+    el.innerHTML=`
+      <div class="step-indicator">${stepDots}</div>
+      <div class="sheet-title">なりたい体型は？</div>
+      <div class="goal-type-grid" id="goalTypeGrid">
+        <div class="goal-type-card ${wizardState.goalType==='abs'?'selected':''}" onclick="selectGoalType('abs')">
+          <div class="goal-type-icon">💪</div>
+          <div class="goal-type-label">腹筋を割る</div>
+          <div class="goal-type-sub">体脂肪率 10%以下</div>
+        </div>
+        <div class="goal-type-card ${wizardState.goalType==='lean'?'selected':''}" onclick="selectGoalType('lean')">
+          <div class="goal-type-icon">✨</div>
+          <div class="goal-type-label">くびれを出す</div>
+          <div class="goal-type-sub">体脂肪率 18〜22%</div>
+        </div>
+        <div class="goal-type-card ${wizardState.goalType==='cut'?'selected':''}" onclick="selectGoalType('cut')">
+          <div class="goal-type-icon">⚡</div>
+          <div class="goal-type-label">絞り込む</div>
+          <div class="goal-type-sub">体脂肪率を下げる</div>
+        </div>
+        <div class="goal-type-card ${wizardState.goalType==='custom'?'selected':''}" onclick="selectGoalType('custom')">
+          <div class="goal-type-icon">🎯</div>
+          <div class="goal-type-label">数値で指定</div>
+          <div class="goal-type-sub">自分で設定</div>
+        </div>
+      </div>
+      <div id="customTargetFields" style="display:${wizardState.goalType==='custom'?'block':'none'};margin-top:12px">
+        <div class="field-row">
+          <div class="field"><label>目標体重 (kg)</label><input type="number" id="wTgtWeight" placeholder="${wizardState.weight||70}" min="30" step="0.1" inputmode="decimal" value="${wizardState.targetWeight||''}"></div>
+          <div class="field"><label>目標体脂肪率 (%)</label><input type="number" id="wTgtFat" placeholder="12" min="3" max="40" step="0.1" inputmode="decimal" value="${wizardState.targetFat||''}"></div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="wizardNext2()" style="margin-top:16px">次へ →</button>
+      <button class="btn-secondary" onclick="wizardBack()">← 戻る</button>`;
+  } else if(wizardStep===3) {
+    el.innerHTML=`
+      <div class="step-indicator">${stepDots}</div>
+      <div class="sheet-title">期間と活動量</div>
+      <div class="field"><label>目標達成まで（週）</label>
+        <select id="wWeeks">
+          ${[4,8,12,16,20,24,36,48].map(w=>`<option value="${w}" ${wizardState.weeks==w?'selected':''}>${w}週間（約${Math.round(w/4.3)}ヶ月）</option>`).join('')}
+        </select>
+      </div>
+      <div class="field"><label>普段の活動量</label>
+        <select id="wActivity">
+          ${Object.entries(activityLabels).map(([k,v])=>`<option value="${k}" ${wizardState.activityLevel===k?'selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+      <button class="btn-primary" onclick="wizardFinish()">計算する ✓</button>
+      <button class="btn-secondary" onclick="wizardBack()">← 戻る</button>`;
+  }
+}
+
+function selectGoalType(type) {
+  wizardState.goalType=type;
+  document.querySelectorAll('.goal-type-card').forEach(c=>c.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  document.getElementById('customTargetFields').style.display=type==='custom'?'block':'none';
+}
+
+function wizardNext1() {
+  const age=parseInt(document.getElementById('wAge').value);
+  const height=parseFloat(document.getElementById('wHeight').value);
+  const weight=parseFloat(document.getElementById('wWeight').value);
+  const fat=parseFloat(document.getElementById('wFat').value);
+  const sex=document.getElementById('wSex').value;
+  if(!age||!height||!weight||isNaN(fat)){showToast('すべての項目を入力してください');return;}
+  wizardState={...wizardState,sex,age,height,weight,fat};
+  wizardStep=2; renderWizard();
+}
+function wizardNext2() {
+  if(!wizardState.goalType){showToast('目標タイプを選んでください');return;}
+  if(wizardState.goalType==='custom') {
+    const tw=parseFloat(document.getElementById('wTgtWeight').value);
+    const tf=parseFloat(document.getElementById('wTgtFat').value);
+    if(isNaN(tw)&&isNaN(tf)){showToast('目標体重か目標体脂肪率を入力してください');return;}
+    wizardState.targetWeight=isNaN(tw)?wizardState.weight:tw;
+    wizardState.targetFat=isNaN(tf)?null:tf;
+  } else {
+    // preset targets based on type
+    const presets={
+      abs:{fat:10, weight:wizardState.weight*(1-(wizardState.fat-10)/100)},
+      lean:{fat:wizardState.sex==='female'?20:15, weight:null},
+      cut:{fat:Math.max(8,wizardState.fat-5), weight:null}
+    };
+    const p=presets[wizardState.goalType];
+    wizardState.targetFat=p.fat;
+    wizardState.targetWeight=p.weight||wizardState.weight*(1-(wizardState.fat-p.fat)/100*0.8);
+  }
+  wizardStep=3; renderWizard();
+}
+function wizardBack(){wizardStep--;renderWizard();}
+function wizardFinish() {
+  wizardState.weeks=parseInt(document.getElementById('wWeeks').value);
+  wizardState.activityLevel=document.getElementById('wActivity').value;
+  goalData={...wizardState};
+  goalResult=calcGoalTargets(goalData);
+  localStorage.setItem('goal_data',JSON.stringify(goalData));
+  applyTargets();
+  closeSheet('goal');
+  renderGoalPage();
+  showToast('目標を設定しました！');
+}
+
+// ── Goal Page ─────────────────────────────────────────────
+function renderGoalPage() {
+  const el=document.getElementById('goalContent');
+  if(!goalData||!goalResult) {
+    el.innerHTML=`<div class="goal-empty">
+      <div style="font-size:48px;margin-bottom:12px">🎯</div>
+      <div style="font-size:17px;font-weight:600;color:var(--text);margin-bottom:8px">目標を設定しよう</div>
+      なりたい体型や目標体重を入力すると<br>1日に必要な摂取カロリーと<br>PFCバランスを自動で計算します
+      <br><br>
+      <button class="btn-primary" style="width:auto;padding:14px 32px" onclick="openSheet('goal')">目標を設定する</button>
+    </div>`;
+    return;
+  }
+  const g=goalData, r=goalResult;
+  const goalTypeLabel={abs:'腹筋を割る',lean:'くびれを出す',cut:'絞り込む',custom:'数値で指定'}[g.goalType]||'目標';
+  const ws=bodyRecords.filter(x=>x.weight!==null),fs=bodyRecords.filter(x=>x.fat!==null);
+  const curW=ws.length?ws[ws.length-1].weight:g.weight;
+  const curF=fs.length?fs[fs.length-1].fat:g.fat;
+  const startFatKg=g.weight*(g.fat/100);
+  const curFatKg=curW*(curF/100);
+  const tgtFatKg=g.targetWeight*(g.targetFat/100);
+  const totalFatLoss=Math.max(0,startFatKg-tgtFatKg);
+  const doneFatLoss=Math.max(0,startFatKg-curFatKg);
+  const progress=totalFatLoss>0?Math.min(100,Math.round(doneFatLoss/totalFatLoss*100)):0;
+  const daysLeft=g.weeks*7-Math.round((Date.now()-new Date(localStorage.getItem('goalStartDate')||Date.now()))/(1000*60*60*24));
+
+  const deficitBadge=r.dailyDeficit>600?'badge-red':r.dailyDeficit>300?'badge-amber':'badge-green';
+
+  el.innerHTML=`
+    <div class="goal-banner">
+      <div class="goal-banner-bg" style="background:var(--bg2)"></div>
+      <div class="goal-banner-inner">
+        <div class="goal-banner-tag">${goalTypeLabel}</div>
+        <div class="goal-banner-title">目標: 体脂肪率 ${g.targetFat}%</div>
+        <div class="goal-banner-sub">体重 ${g.targetWeight.toFixed(1)}kg まで</div>
+        <div style="margin-top:12px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:6px">
+            <span>進捗</span><span>${progress}%</span>
+          </div>
+          <div style="height:6px;background:var(--bg4);border-radius:3px;overflow:hidden">
+            <div style="height:100%;background:var(--accent2);border-radius:3px;width:${progress}%;transition:width .5s"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:10px">1日の目標摂取量</div>
+    <div class="goal-result-grid">
+      <div class="goal-result-card" style="grid-column:1/-1">
+        <div class="goal-result-label">カロリー</div>
+        <div class="goal-result-val" style="font-size:32px;color:var(--accent)">${r.cal}<span class="goal-result-unit">kcal</span></div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">TDEE ${r.tdee}kcal から <span class="badge ${deficitBadge}">${r.dailyDeficit}kcal 赤字</span></div>
+      </div>
+      <div class="goal-result-card">
+        <div class="goal-result-label">タンパク質</div>
+        <div class="goal-result-val" style="color:var(--accent2)">${r.p}<span class="goal-result-unit">g</span></div>
+      </div>
+      <div class="goal-result-card">
+        <div class="goal-result-label">脂質</div>
+        <div class="goal-result-val" style="color:var(--amber)">${r.f}<span class="goal-result-unit">g</span></div>
+      </div>
+      <div class="goal-result-card">
+        <div class="goal-result-label">炭水化物</div>
+        <div class="goal-result-val" style="color:var(--blue)">${r.c}<span class="goal-result-unit">g</span></div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-row"><span class="info-label">現在の体脂肪</span><span class="info-val">${curFatKg.toFixed(1)} kg</span></div>
+      <div class="info-row"><span class="info-label">目標の体脂肪</span><span class="info-val">${tgtFatKg.toFixed(1)} kg</span></div>
+      <div class="info-row"><span class="info-label">落とす脂肪量</span><span class="info-val">${r.fatToLose} kg</span></div>
+      <div class="info-row"><span class="info-label">除脂肪体重 (LBM)</span><span class="info-val">${r.lbm} kg</span></div>
+      <div class="info-row"><span class="info-label">目標期間</span><span class="info-val">${g.weeks}週間</span></div>
+      <div class="info-row"><span class="info-label">活動量</span><span class="info-val">${activityLabels[g.activityLevel]||''}</span></div>
+    </div>
+
+    <button class="btn-secondary" onclick="openSheet('goal')" style="margin-bottom:20px">目標を変更する</button>
+  `;
+  if(!localStorage.getItem('goalStartDate')) localStorage.setItem('goalStartDate', new Date().toISOString().split('T')[0]);
+}
+
+// ── Utils ─────────────────────────────────────────────────
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+function clearToday(){if(!confirm('今日の食事記録を削除しますか？'))return;meals=[];save();renderMeals();updateSummary();showToast('削除しました');}
+function clearAll(){if(!confirm('すべてのデータを削除しますか？この操作は元に戻せません。'))return;meals=[];foodHistory=[];bodyRecords=[];goalData=null;goalResult=null;localStorage.clear();renderMeals();updateSummary();updateBodyStats();renderGoalPage();showToast('削除しました');}
+
+// ── Init ──────────────────────────────────────────────────
+const today=new Date();
+document.getElementById('dateBadge').textContent=`${today.getMonth()+1}/${today.getDate()}`;
+load();
+renderMeals();
+updateSummary();
+updateBodyStats();
+</script>
+</body>
+</html>
