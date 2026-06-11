@@ -19,7 +19,7 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 .tab-bar{display:flex;background:var(--bg2);border-top:0.5px solid var(--border);padding-bottom:calc(8px + var(--safe-bottom));flex-shrink:0}
 .tab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 6px;cursor:pointer;color:var(--text3);font-size:10px;border:none;background:transparent}
 .tab-item.active{color:var(--accent)}
-.tab-item svg{width:24px;height:24px;stroke-width:1.8}
+.tab-item svg{width:22px;height:22px;stroke-width:1.8}
 .content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 24px}
 .page{display:none}.page.active{display:block}
 .macro-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
@@ -112,9 +112,7 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 .goal-type-icon{font-size:28px;margin-bottom:8px}
 .goal-type-label{font-size:14px;font-weight:600}
 .goal-type-sub{font-size:11px;color:var(--text2);margin-top:4px}
-/* DB検索 */
-.db-search-wrap{position:relative;margin-bottom:10px}
-.db-search-input{width:100%;background:var(--bg3);border:0.5px solid var(--accent);border-radius:var(--radius-sm);padding:12px 14px;font-size:16px;color:var(--text)}
+.db-search-input{width:100%;background:var(--bg3);border:0.5px solid var(--accent);border-radius:var(--radius-sm);padding:12px 14px;font-size:16px;color:var(--text);margin-bottom:10px}
 .db-search-input::placeholder{color:var(--text3)}
 .db-results{background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);max-height:200px;overflow-y:auto;margin-bottom:10px}
 .db-result-item{padding:11px 14px;border-bottom:0.5px solid var(--border);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
@@ -126,8 +124,8 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 .db-selected{background:rgba(29,158,117,0.1);border:0.5px solid var(--accent2);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:12px}
 .db-selected-name{font-size:14px;font-weight:600;color:var(--accent2);margin-bottom:6px}
 .db-selected-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
-.db-selected-macro-val{font-size:16px;font-weight:700}
-.db-selected-macro-label{font-size:10px;color:var(--text2);margin-top:1px}
+.db-sel-val{font-size:16px;font-weight:700}
+.db-sel-label{font-size:10px;color:var(--text2);margin-top:1px}
 .mode-tabs{display:flex;gap:6px;margin-bottom:14px}
 .mode-tab{flex:1;padding:9px;font-size:12px;border-radius:8px;border:0.5px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer}
 .mode-tab.active{background:rgba(127,119,221,0.15);border-color:var(--accent);color:var(--accent);font-weight:600}
@@ -136,14 +134,13 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 .category-chips::-webkit-scrollbar{display:none}
 .cat-chip{background:var(--bg3);border:0.5px solid var(--border2);border-radius:20px;padding:6px 12px;white-space:nowrap;font-size:12px;cursor:pointer;flex-shrink:0;color:var(--text2)}
 .cat-chip.active{background:rgba(127,119,221,0.15);border-color:var(--accent);color:var(--accent)}
-/* ── カレンダー ── */
+/* カレンダー */
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .cal-month{font-size:18px;font-weight:700}
-.cal-nav{background:transparent;border:0.5px solid var(--border2);border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text)}
+.cal-nav{background:transparent;border:0.5px solid var(--border2);border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:18px}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px}
 .cal-day-label{text-align:center;font-size:11px;color:var(--text3);padding:4px 0}
 .cal-day{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;gap:2px}
-.cal-day:active{opacity:0.7}
 .cal-day.empty{cursor:default}
 .cal-day.today .cal-day-num{background:var(--accent);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center}
 .cal-day.selected{background:rgba(127,119,221,0.15);border:0.5px solid var(--accent)}
@@ -152,7 +149,7 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 .cal-dot-row{display:flex;gap:2px;justify-content:center;height:6px}
 .cal-dot{width:4px;height:4px;border-radius:50%}
 .cal-detail{background:var(--bg2);border-radius:var(--radius);padding:16px;margin-bottom:12px}
-.cal-detail-date{font-size:15px;font-weight:700;margin-bottom:12px;color:var(--text)}
+.cal-detail-date{font-size:15px;font-weight:700;margin-bottom:12px}
 .cal-detail-section{margin-bottom:12px}
 .cal-detail-section-title{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
 .cal-macro-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
@@ -161,26 +158,81 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 .cal-macro-label{font-size:10px;color:var(--text2);margin-top:2px}
 .cal-meal-item{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border)}
 .cal-meal-item:last-child{border-bottom:none}
-.cal-meal-name{font-size:13px;color:var(--text)}
-.cal-meal-kcal{font-size:13px;font-weight:600;color:var(--accent)}
 .cal-body-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .cal-body-item{background:var(--bg3);border-radius:8px;padding:10px;text-align:center}
 .cal-body-val{font-size:20px;font-weight:700}
 .cal-body-label{font-size:11px;color:var(--text2);margin-top:2px}
 .cal-empty-day{text-align:center;padding:24px;color:var(--text3);font-size:14px}
+/* ══ 消費カロリーページ ══ */
+.burn-ring-wrap{background:var(--bg2);border-radius:var(--radius);padding:20px;margin-bottom:12px}
+.burn-ring-top{display:flex;align-items:center;gap:20px;margin-bottom:16px}
+.burn-ring-labels{flex:1}
+.burn-net-label{font-size:12px;color:var(--text2);margin-top:8px}
+.burn-net-val{font-size:18px;font-weight:700;margin-top:2px}
+.burn-three-rings{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.burn-ring-item{background:var(--bg3);border-radius:var(--radius-sm);padding:12px;text-align:center;position:relative}
+.burn-ring-label{font-size:11px;color:var(--text2);margin-bottom:8px}
+.burn-ring-svg{margin:0 auto 6px}
+.burn-ring-center-val{font-size:14px;font-weight:700}
+.burn-ring-sub{font-size:10px;color:var(--text2)}
+.burn-bar-card{background:var(--bg2);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.burn-bar-title{font-size:14px;font-weight:600;margin-bottom:14px}
+.burn-bar-row{margin-bottom:12px}
+.burn-bar-row:last-child{margin-bottom:0}
+.burn-bar-header{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+.burn-bar-label{color:var(--text2)}
+.burn-bar-vals{color:var(--text3)}
+.burn-bar-track{height:10px;background:var(--bg4);border-radius:5px;overflow:hidden;position:relative}
+.burn-bar-fill{height:100%;border-radius:5px;transition:width .5s}
+.burn-bar-target-line{position:absolute;top:0;bottom:0;width:2px;background:rgba(255,255,255,0.4);border-radius:1px}
+.exercise-card{background:var(--bg2);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.exercise-icon{font-size:22px;flex-shrink:0}
+.exercise-info{flex:1}
+.exercise-name{font-size:14px;font-weight:500}
+.exercise-meta{font-size:12px;color:var(--text2);margin-top:2px}
+.exercise-cal{font-size:14px;font-weight:600;color:var(--amber);flex-shrink:0}
+.ex-preset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.ex-preset-btn{background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:10px 6px;text-align:center;cursor:pointer}
+.ex-preset-btn.selected{border-color:var(--accent);background:rgba(127,119,221,0.15)}
+.ex-preset-icon{font-size:20px;margin-bottom:4px}
+.ex-preset-name{font-size:11px;color:var(--text2)}
+.ex-preset-kcal{font-size:10px;color:var(--text3);margin-top:2px}
+.weekly-chart-card{background:var(--bg2);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+/* 日付バッジ（タップ可能） */
+.date-badge{cursor:pointer;transition:background .15s}
+.date-badge:active{background:var(--bg4)}
+.date-badge.other-day{background:rgba(127,119,221,0.18);color:var(--accent);border:0.5px solid var(--accent)}
+/* 日付切り替えバナー */
+.date-nav-banner{background:rgba(127,119,221,0.1);border:0.5px solid rgba(127,119,221,0.3);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.date-nav-banner-label{font-size:13px;color:var(--accent)}
+.date-nav-banner-back{background:transparent;border:0.5px solid var(--accent);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--accent);cursor:pointer}
+/* カレンダー詳細シート */
+.day-detail-section{margin-bottom:16px}
+.day-detail-section-title{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.day-macro-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.day-macro-item{background:var(--bg3);border-radius:8px;padding:10px 6px;text-align:center}
+.day-macro-val{font-size:15px;font-weight:700}
+.day-macro-label{font-size:10px;color:var(--text2);margin-top:2px}
+.day-meal-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border)}
+.day-meal-item:last-child{border-bottom:none}
+.day-balance-card{background:var(--bg3);border-radius:var(--radius-sm);padding:12px;display:flex;justify-content:space-between;align-items:center}
 </style>
 </head>
 <body>
 <div class="topbar">
   <div class="topbar-title" id="pageTitle">食事</div>
-  <div class="date-badge" id="dateBadge"></div>
+  <div class="date-badge" id="dateBadge" onclick="openDatePicker()"></div>
 </div>
 <div class="content">
-  <!-- 食事ページ -->
+  <!-- 食事 -->
   <div class="page active" id="page-food">
+    <div id="foodDateBanner" style="display:none" class="date-nav-banner">
+      <span class="date-nav-banner-label" id="foodDateBannerLabel"></span>
+      <button class="date-nav-banner-back" onclick="backToToday('food')">今日に戻る</button>
+    </div>
     <div class="cal-ring-wrap">
       <div class="ring-labels">
-        <div class="ring-cal"><span id="sumCal">0</span> <span style="font-size:16px;font-weight:400;color:var(--text2)">kcal</span></div>
+        <div class="ring-cal"><span id="sumCal">0</span><span style="font-size:16px;font-weight:400;color:var(--text2)"> kcal</span></div>
         <div class="ring-sub">摂取カロリー</div>
         <div class="ring-remaining">目標まで <span id="calRemain">—</span> kcal</div>
       </div>
@@ -198,12 +250,103 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
         <div style="font-size:13px;color:var(--accent);margin-top:6px">食事を追加</div>
       </div>
     </div>
-    <div class="sec-header"><div class="sec-title">今日の食事</div></div>
+    <div class="sec-header"><div class="sec-title" id="foodSecTitle">今日の食事</div></div>
     <div id="mealList"></div>
   </div>
 
-  <!-- 体重ページ -->
+  <!-- 消費カロリー -->
+  <div class="page" id="page-burn">
+    <!-- リンググラフ3つ -->
+    <div class="burn-ring-wrap">
+      <div class="burn-ring-top">
+        <div class="burn-ring-labels" style="flex:1">
+          <div style="font-size:13px;color:var(--text2)">今日の収支</div>
+          <div id="netCalDisplay" style="font-size:36px;font-weight:700;margin-top:4px">—</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:2px">kcal（摂取 − 消費）</div>
+          <div id="netStatusBadge" style="margin-top:8px"></div>
+        </div>
+        <!-- メインリング -->
+        <div style="text-align:center">
+          <svg width="90" height="90" viewBox="0 0 90 90">
+            <circle cx="45" cy="45" r="38" fill="none" stroke="var(--bg4)" stroke-width="8"/>
+            <circle cx="45" cy="45" r="38" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" stroke-dasharray="238.8" stroke-dashoffset="238.8" id="mainBurnRing" transform="rotate(-90 45 45)" style="transition:stroke-dashoffset .5s"/>
+          </svg>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px">消費達成率</div>
+          <div id="burnPctLabel" style="font-size:16px;font-weight:700">0%</div>
+        </div>
+      </div>
+      <!-- 3つのサブリング -->
+      <div class="burn-three-rings">
+        <div class="burn-ring-item">
+          <div class="burn-ring-label">🔥 アクティブ</div>
+          <svg class="burn-ring-svg" width="60" height="60" viewBox="0 0 60 60">
+            <circle cx="30" cy="30" r="24" fill="none" stroke="var(--bg4)" stroke-width="6"/>
+            <circle cx="30" cy="30" r="24" fill="none" stroke="var(--amber)" stroke-width="6" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" id="activeRing" transform="rotate(-90 30 30)" style="transition:stroke-dashoffset .5s"/>
+          </svg>
+          <div class="burn-ring-center-val" style="color:var(--amber)" id="activeCalVal">0</div>
+          <div class="burn-ring-sub">/ <span id="activeCalTarget">500</span> kcal</div>
+        </div>
+        <div class="burn-ring-item">
+          <div class="burn-ring-label">💤 基礎代謝</div>
+          <svg class="burn-ring-svg" width="60" height="60" viewBox="0 0 60 60">
+            <circle cx="30" cy="30" r="24" fill="none" stroke="var(--bg4)" stroke-width="6"/>
+            <circle cx="30" cy="30" r="24" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="0" id="basalRing" transform="rotate(-90 30 30)" style="transition:stroke-dashoffset .5s"/>
+          </svg>
+          <div class="burn-ring-center-val" style="color:var(--accent)" id="basalCalVal">—</div>
+          <div class="burn-ring-sub">kcal/日</div>
+        </div>
+        <div class="burn-ring-item">
+          <div class="burn-ring-label">👟 歩数</div>
+          <svg class="burn-ring-svg" width="60" height="60" viewBox="0 0 60 60">
+            <circle cx="30" cy="30" r="24" fill="none" stroke="var(--bg4)" stroke-width="6"/>
+            <circle cx="30" cy="30" r="24" fill="none" stroke="var(--accent2)" stroke-width="6" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" id="stepsRing" transform="rotate(-90 30 30)" style="transition:stroke-dashoffset .5s"/>
+          </svg>
+          <div class="burn-ring-center-val" style="color:var(--accent2)" id="stepsVal">0</div>
+          <div class="burn-ring-sub">/ <span id="stepsTarget">8000</span> 歩</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- バーグラフ（摂取vs消費vs目標） -->
+    <div class="burn-bar-card">
+      <div class="burn-bar-title">今日のカロリー内訳</div>
+      <div class="burn-bar-row">
+        <div class="burn-bar-header"><span class="burn-bar-label">摂取カロリー</span><span class="burn-bar-vals" id="intakeBarLabel">0 / — kcal</span></div>
+        <div class="burn-bar-track"><div class="burn-bar-fill" id="intakeBar" style="background:var(--accent);width:0%"></div></div>
+      </div>
+      <div class="burn-bar-row">
+        <div class="burn-bar-header"><span class="burn-bar-label">消費カロリー（合計）</span><span class="burn-bar-vals" id="burnBarLabel">0 / — kcal</span></div>
+        <div class="burn-bar-track"><div class="burn-bar-fill" id="burnBar" style="background:var(--amber);width:0%"></div></div>
+      </div>
+      <div class="burn-bar-row">
+        <div class="burn-bar-header"><span class="burn-bar-label">アクティブ消費</span><span class="burn-bar-vals" id="activeBarLabel">0 / — kcal</span></div>
+        <div class="burn-bar-track"><div class="burn-bar-fill" id="activeBar" style="background:var(--accent2);width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- 週次バーチャート -->
+    <div class="weekly-chart-card">
+      <div class="chart-card-title">週間 消費カロリー推移</div>
+      <div class="chart-wrap"><canvas id="weeklyBurnChart"></canvas></div>
+    </div>
+
+    <!-- 運動記録 -->
+    <div class="sec-header">
+      <div class="sec-title">今日の運動</div>
+      <button onclick="openSheet('exercise')" style="background:var(--accent);border:none;border-radius:20px;padding:6px 14px;font-size:13px;color:#fff;cursor:pointer;font-weight:600">+ 追加</button>
+    </div>
+    <div id="exerciseList"></div>
+
+    <!-- 基礎代謝・目標設定ボタン -->
+    <button onclick="openSheet('burnSettings')" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:13px;font-size:14px;color:var(--text2);cursor:pointer;margin-top:4px">⚙️ 基礎代謝・目標を設定</button>
+  </div>
+
+  <!-- 体重 -->
   <div class="page" id="page-body">
+    <div id="bodyDateBanner" style="display:none" class="date-nav-banner">
+      <span class="date-nav-banner-label" id="bodyDateBannerLabel"></span>
+      <button class="date-nav-banner-back" onclick="backToToday('body')">今日に戻る</button>
+    </div>
     <div class="body-summary">
       <div class="body-card"><div class="body-card-val" style="color:var(--accent)" id="latestWeight">—</div><div class="body-card-label">体重 kg</div><div class="body-card-sub" id="weightDiff"></div></div>
       <div class="body-card"><div class="body-card-val" style="color:var(--accent2)" id="latestFat">—</div><div class="body-card-label">体脂肪率 %</div><div class="body-card-sub" id="fatDiff"></div></div>
@@ -213,7 +356,7 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
     <div class="chart-card"><div class="chart-card-title">体脂肪率の推移 (%)</div><div class="chart-wrap"><canvas id="fatChart"></canvas></div></div>
   </div>
 
-  <!-- カレンダーページ -->
+  <!-- カレンダー -->
   <div class="page" id="page-calendar">
     <div class="cal-header">
       <button class="cal-nav" onclick="calPrevMonth()">‹</button>
@@ -224,10 +367,10 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
     <div id="calDetail"></div>
   </div>
 
-  <!-- 目標ページ -->
+  <!-- 目標 -->
   <div class="page" id="page-goal"><div id="goalContent"></div></div>
 
-  <!-- 設定ページ -->
+  <!-- 設定 -->
   <div class="page" id="page-settings">
     <div class="settings-section-title">1日の目標（手動設定）</div>
     <div class="settings-section">
@@ -243,17 +386,17 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
       <div class="settings-row" onclick="clearAll()" style="cursor:pointer"><div><div class="settings-row-label" style="color:var(--red)">すべてのデータを削除</div></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
     </div>
     <div class="settings-section-title">アプリについて</div>
-    <div class="settings-section"><div class="settings-row"><div><div class="settings-row-label">バージョン</div><div class="settings-row-sub">腹筋トラッカー v4.0</div></div></div></div>
+    <div class="settings-section"><div class="settings-row"><div><div class="settings-row-label">バージョン</div><div class="settings-row-sub">腹筋トラッカー v5.0</div></div></div></div>
   </div>
 </div>
 
 <!-- タブバー -->
 <nav class="tab-bar">
   <button class="tab-item active" onclick="switchPage('food',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>食事</button>
+  <button class="tab-item" onclick="switchPage('burn',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>消費</button>
   <button class="tab-item" onclick="switchPage('body',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4a4 4 0 1 1-8 0 4 4 0 0 1 8 0"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>体重</button>
   <button class="tab-item" onclick="switchPage('calendar',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>記録</button>
   <button class="tab-item" onclick="switchPage('goal',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>目標</button>
-  <button class="tab-item" onclick="switchPage('settings',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>設定</button>
 </nav>
 
 <!-- 食事追加シート -->
@@ -268,16 +411,12 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
     </div>
     <div id="modeDb">
       <div class="category-chips" id="catChips"></div>
-      <div class="db-search-wrap"><input class="db-search-input" id="dbSearchInput" type="text" placeholder="料理名・食品名で検索..." oninput="dbSearch(this.value)" autocomplete="off"></div>
+      <input class="db-search-input" id="dbSearchInput" type="text" placeholder="料理名・食品名で検索..." oninput="dbSearch(this.value)" autocomplete="off">
       <div id="dbResults"></div>
       <div id="dbSelected" style="display:none"></div>
     </div>
-    <div id="modeHist" style="display:none">
-      <div class="hist-section"><div class="hist-label">最近の食事</div><div class="hist-scroll" id="histScroll"></div></div>
-    </div>
-    <div id="modeManual" style="display:none">
-      <div style="font-size:12px;color:var(--text2);margin-bottom:12px">数値を直接入力します</div>
-    </div>
+    <div id="modeHist" style="display:none"><div class="hist-section"><div class="hist-label">最近の食事</div><div class="hist-scroll" id="histScroll"></div></div></div>
+    <div id="modeManual" style="display:none"><div style="font-size:12px;color:var(--text2);margin-bottom:12px">数値を直接入力します</div></div>
     <div class="field"><label>食品名</label><input type="text" id="inName" placeholder="例: 鶏むね肉 100g"></div>
     <div class="field-row">
       <div class="field"><label>タイミング</label><select id="inTime"><option value="朝食">朝食</option><option value="昼食">昼食</option><option value="夕食">夕食</option><option value="間食">間食</option></select></div>
@@ -290,6 +429,53 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
     <div class="field"><label>炭水化物 (g)</label><input type="number" id="inC" placeholder="0" min="0" step="0.1" inputmode="decimal" style="width:calc(50% - 5px)"></div>
     <button class="btn-primary" onclick="addMeal()">追加する</button>
     <button class="btn-secondary" onclick="closeSheet('meal')">キャンセル</button>
+  </div>
+</div>
+
+<!-- 運動追加シート -->
+<div class="sheet-overlay" id="exerciseSheet" onclick="closeSheet('exercise')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">運動を記録</div>
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tabExPreset" onclick="setExMode('preset')">🏃 種目から選ぶ</button>
+      <button class="mode-tab" id="tabExManual" onclick="setExMode('manual')">✏️ 直接入力</button>
+    </div>
+    <div id="exModePreset">
+      <div class="ex-preset-grid" id="exPresetGrid"></div>
+      <div class="field"><label>時間（分）</label><input type="number" id="exDuration" placeholder="30" min="1" inputmode="numeric"></div>
+      <div id="exCalPreview" style="background:rgba(239,159,39,0.1);border:0.5px solid var(--amber);border-radius:var(--radius-sm);padding:12px;text-align:center;margin-bottom:12px;display:none">
+        <div style="font-size:12px;color:var(--text2)">推定消費カロリー</div>
+        <div id="exCalPreviewVal" style="font-size:28px;font-weight:700;color:var(--amber)">—</div>
+        <div style="font-size:11px;color:var(--text3)">kcal</div>
+      </div>
+    </div>
+    <div id="exModeManual" style="display:none">
+      <div class="field"><label>運動名</label><input type="text" id="exNameManual" placeholder="例: テニス、縄跳び..."></div>
+      <div class="field-row">
+        <div class="field"><label>時間（分）</label><input type="number" id="exDurationManual" placeholder="30" min="1" inputmode="numeric"></div>
+        <div class="field"><label>消費カロリー（kcal）</label><input type="number" id="exCalManual" placeholder="200" min="0" inputmode="numeric"></div>
+      </div>
+    </div>
+    <div style="margin-bottom:12px">
+      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">歩数（任意）</label>
+      <input type="number" id="exSteps" placeholder="例: 3000" min="0" inputmode="numeric" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:12px 14px;font-size:16px;color:var(--text)">
+    </div>
+    <button class="btn-primary" onclick="addExercise()">記録する</button>
+    <button class="btn-secondary" onclick="closeSheet('exercise')">キャンセル</button>
+  </div>
+</div>
+
+<!-- 消費設定シート -->
+<div class="sheet-overlay" id="burnSettingsSheet" onclick="closeSheet('burnSettings')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">消費カロリー目標を設定</div>
+    <div class="field"><label>基礎代謝 (kcal/日)</label><input type="number" id="bsBasal" placeholder="例: 1600" inputmode="numeric"><div style="font-size:11px;color:var(--text3);margin-top:4px">目安: 体重×22〜24 kcal</div></div>
+    <div class="field"><label>アクティブ消費目標 (kcal/日)</label><input type="number" id="bsActiveTarget" placeholder="例: 500" inputmode="numeric"></div>
+    <div class="field"><label>1日の歩数目標</label><input type="number" id="bsStepsTarget" placeholder="例: 8000" inputmode="numeric"></div>
+    <button class="btn-primary" onclick="saveBurnSettings()">保存する</button>
+    <button class="btn-secondary" onclick="closeSheet('burnSettings')">キャンセル</button>
   </div>
 </div>
 
@@ -316,18 +502,41 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
   </div>
 </div>
 
+<!-- 日付選択シート -->
+<div class="sheet-overlay" id="datePickerSheet" onclick="closeSheet('datePicker')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="datePickerTitle">日付を選択</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:16px">別の日の記録を見る・入力できます</div>
+    <div class="field">
+      <label>日付</label>
+      <input type="date" id="dpDateInput">
+    </div>
+    <button class="btn-primary" onclick="applyDatePicker()">この日の記録を見る</button>
+    <button class="btn-secondary" onclick="closeSheet('datePicker')">キャンセル</button>
+  </div>
+</div>
+
+<!-- カレンダー日付詳細シート -->
+<div class="sheet-overlay" id="dayDetailSheet" onclick="closeSheet('dayDetail')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div id="dayDetailContent"></div>
+    <button class="btn-secondary" onclick="closeSheet('dayDetail')" style="margin-top:8px">閉じる</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 // ══════════════════════════════════════════════════════════
-// 食品データベース
+// 食品DB
 // ══════════════════════════════════════════════════════════
 const FOOD_DB=[
   {name:'白米（茶碗1杯 150g）',cat:'主食',cal:252,p:3.8,f:0.5,c:55.7},
   {name:'白米（大盛り 200g）',cat:'主食',cal:336,p:5.0,f:0.6,c:74.2},
   {name:'玄米（茶碗1杯 150g）',cat:'主食',cal:248,p:4.2,f:1.5,c:53.4},
   {name:'食パン（6枚切り1枚）',cat:'主食',cal:158,p:5.6,f:2.6,c:28.0},
-  {name:'食パン（8枚切り1枚）',cat:'主食',cal:119,p:4.2,f:2.0,c:21.0},
   {name:'うどん（1玉 200g）',cat:'主食',cal:210,p:5.2,f:0.8,c:43.2},
   {name:'そば（1玉 200g）',cat:'主食',cal:264,p:9.6,f:1.0,c:51.6},
   {name:'パスタ（乾燥 80g）',cat:'主食',cal:286,p:10.1,f:1.2,c:57.4},
@@ -335,308 +544,536 @@ const FOOD_DB=[
   {name:'親子丼（1杯）',cat:'和食',cal:580,p:28,f:14,c:78},
   {name:'カツ丼（1杯）',cat:'和食',cal:780,p:30,f:22,c:102},
   {name:'牛丼（並盛）',cat:'和食',cal:640,p:20,f:18,c:96},
-  {name:'天丼（1杯）',cat:'和食',cal:720,p:22,f:18,c:108},
   {name:'鮭おにぎり（1個）',cat:'和食',cal:185,p:6,f:2,c:35},
   {name:'ツナマヨおにぎり（1個）',cat:'和食',cal:215,p:6,f:7,c:32},
-  {name:'梅おにぎり（1個）',cat:'和食',cal:170,p:4,f:0.5,c:37},
   {name:'味噌汁（1杯）',cat:'和食',cal:35,p:2.5,f:1.5,c:3},
-  {name:'豚汁（1杯）',cat:'和食',cal:120,p:6,f:5,c:12},
-  {name:'冷奴（1丁 150g）',cat:'和食',cal:84,p:8,f:4.5,c:2},
   {name:'納豆（1パック 45g）',cat:'和食',cal:85,p:7.4,f:4.5,c:5},
-  {name:'卵焼き（2個分）',cat:'和食',cal:130,p:9,f:9,c:2},
-  {name:'目玉焼き（1個）',cat:'和食',cal:90,p:6,f:7,c:0.2},
   {name:'ゆで卵（1個）',cat:'和食',cal:78,p:6.5,f:5,c:0.4},
   {name:'焼き魚・鮭（1切れ）',cat:'和食',cal:175,p:22,f:9,c:0},
-  {name:'焼き魚・さば（1切れ）',cat:'和食',cal:202,p:20,f:13,c:0},
-  {name:'刺身・マグロ（5切れ）',cat:'和食',cal:108,p:22,f:1.5,c:0.2},
   {name:'唐揚げ（3個）',cat:'和食',cal:340,p:24,f:20,c:15},
   {name:'餃子（6個）',cat:'和食',cal:300,p:14,f:12,c:32},
-  {name:'肉じゃが（1人前）',cat:'和食',cal:280,p:12,f:8,c:38},
   {name:'卵かけご飯（1杯）',cat:'和食',cal:330,p:10,f:6,c:57},
-  {name:'すき焼き（1人前）',cat:'和食',cal:480,p:28,f:22,c:38},
   {name:'ハンバーグ（1個）',cat:'洋食',cal:350,p:18,f:22,c:18},
   {name:'カレーライス（1皿）',cat:'洋食',cal:720,p:18,f:18,c:112},
   {name:'チャーハン（1皿）',cat:'洋食',cal:580,p:16,f:18,c:86},
-  {name:'オムライス（1皿）',cat:'洋食',cal:620,p:20,f:22,c:84},
   {name:'スパゲッティミートソース（1皿）',cat:'洋食',cal:620,p:22,f:18,c:88},
-  {name:'スパゲッティカルボナーラ（1皿）',cat:'洋食',cal:680,p:20,f:26,c:88},
-  {name:'ピザ（マルゲリータ 1枚）',cat:'洋食',cal:680,p:24,f:22,c:96},
   {name:'ハンバーガー（1個）',cat:'洋食',cal:460,p:18,f:20,c:52},
   {name:'ビッグマック（1個）',cat:'洋食',cal:525,p:26,f:26,c:45},
   {name:'フライドポテト（M）',cat:'洋食',cal:330,p:4,f:16,c:44},
   {name:'とんかつ（1枚）',cat:'洋食',cal:480,p:28,f:28,c:28},
-  {name:'チキン南蛮（1人前）',cat:'洋食',cal:520,p:30,f:22,c:44},
-  {name:'麻婆豆腐（1人前）',cat:'洋食',cal:320,p:18,f:18,c:20},
   {name:'鶏むね肉（100g 皮なし）',cat:'肉・魚',cal:116,p:23,f:1.9,c:0},
   {name:'鶏もも肉（100g 皮なし）',cat:'肉・魚',cal:127,p:19,f:5,c:0},
-  {name:'鶏もも肉（100g 皮あり）',cat:'肉・魚',cal:190,p:17,f:14,c:0},
   {name:'豚ロース（100g）',cat:'肉・魚',cal:263,p:19,f:19,c:0.3},
   {name:'豚バラ（100g）',cat:'肉・魚',cal:395,p:14,f:35,c:0.2},
   {name:'牛もも（100g）',cat:'肉・魚',cal:182,p:21,f:10,c:0.4},
   {name:'サーモン（100g）',cat:'肉・魚',cal:204,p:20,f:13,c:0.1},
   {name:'マグロ赤身（100g）',cat:'肉・魚',cal:125,p:26,f:1.4,c:0.2},
   {name:'えび（100g）',cat:'肉・魚',cal:97,p:21,f:1,c:0.1},
-  {name:'さば（100g）',cat:'肉・魚',cal:247,p:21,f:17,c:0.3},
   {name:'ブロッコリー（100g）',cat:'野菜',cal:37,p:4.3,f:0.5,c:5.2},
-  {name:'ほうれん草（100g）',cat:'野菜',cal:20,p:2.2,f:0.4,c:3.1},
   {name:'キャベツ（100g）',cat:'野菜',cal:23,p:1.3,f:0.2,c:5.2},
   {name:'トマト（1個 150g）',cat:'野菜',cal:29,p:1.1,f:0.1,c:5.6},
   {name:'アボカド（1/2個 75g）',cat:'野菜',cal:134,p:1.5,f:12.5,c:3},
   {name:'豆腐 絹（1/2丁 150g）',cat:'野菜',cal:84,p:7.5,f:4.5,c:2.4},
   {name:'枝豆（100g）',cat:'野菜',cal:135,p:11.5,f:6.1,c:8.8},
-  {name:'さつまいも（100g）',cat:'野菜',cal:132,p:1.2,f:0.2,c:31.9},
   {name:'全卵（1個 60g）',cat:'乳製品',cal:91,p:7.4,f:6.2,c:0.2},
   {name:'牛乳（200ml）',cat:'乳製品',cal:137,p:6.9,f:7.8,c:9.9},
   {name:'ギリシャヨーグルト（100g）',cat:'乳製品',cal:59,p:10,f:0,c:4},
-  {name:'プレーンヨーグルト（100g）',cat:'乳製品',cal:62,p:3.6,f:3,c:5},
-  {name:'チーズ（1枚 18g）',cat:'乳製品',cal:61,p:4,f:4.6,c:1.2},
-  {name:'プロテイン（1杯 25g）',cat:'乳製品',cal:100,p:20,f:1.5,c:3},
   {name:'バナナ（1本 100g）',cat:'果物',cal:93,p:1.1,f:0.2,c:22.5},
   {name:'りんご（1/2個 125g）',cat:'果物',cal:69,p:0.2,f:0.2,c:18.5},
-  {name:'みかん（1個 80g）',cat:'果物',cal:38,p:0.6,f:0.1,c:9},
-  {name:'いちご（10粒 150g）',cat:'果物',cal:51,p:1.1,f:0.2,c:12.8},
   {name:'ラーメン（醤油 1杯）',cat:'外食',cal:520,p:20,f:12,c:84},
-  {name:'ラーメン（豚骨 1杯）',cat:'外食',cal:600,p:22,f:18,c:84},
-  {name:'つけ麺（1杯）',cat:'外食',cal:680,p:26,f:14,c:108},
   {name:'うどん（かけ 1杯）',cat:'外食',cal:320,p:10,f:2,c:66},
-  {name:'そば（ざる 1杯）',cat:'外食',cal:380,p:16,f:2,c:72},
   {name:'牛丼（吉野家 並）',cat:'外食',cal:652,p:22,f:18,c:96},
-  {name:'松屋 牛めし（並）',cat:'外食',cal:622,p:20,f:16,c:96},
-  {name:'マクドナルド フィレオフィッシュ',cat:'外食',cal:379,p:16,f:18,c:38},
   {name:'ケンタッキー オリジナルチキン（1ピース）',cat:'外食',cal:280,p:18,f:16,c:14},
-  {name:'コンビニ おにぎり 鮭',cat:'コンビニ',cal:185,p:6,f:2,c:35},
-  {name:'コンビニ サンドイッチ（ハム）',cat:'コンビニ',cal:290,p:12,f:10,c:38},
   {name:'コンビニ サラダチキン（1個）',cat:'コンビニ',cal:115,p:24,f:1.5,c:1},
-  {name:'コンビニ ゆで卵（1個）',cat:'コンビニ',cal:78,p:6.5,f:5,c:0.3},
+  {name:'コンビニ おにぎり 鮭',cat:'コンビニ',cal:185,p:6,f:2,c:35},
   {name:'コンビニ カップヌードル',cat:'コンビニ',cal:351,p:10,f:14,c:44},
   {name:'コンビニ 幕の内弁当',cat:'コンビニ',cal:680,p:22,f:18,c:102},
-  {name:'コンビニ からあげ弁当',cat:'コンビニ',cal:820,p:28,f:28,c:110},
-  {name:'コンビニ チキン（1本）',cat:'コンビニ',cal:260,p:18,f:14,c:14},
-  {name:'コンビニ 肉まん（1個）',cat:'コンビニ',cal:230,p:8,f:7,c:34},
   {name:'焼き肉定食（1人前）',cat:'定食',cal:820,p:36,f:28,c:104},
   {name:'唐揚げ定食（1人前）',cat:'定食',cal:780,p:34,f:26,c:98},
-  {name:'鮭定食（1人前）',cat:'定食',cal:580,p:30,f:12,c:82},
   {name:'とんかつ定食（1人前）',cat:'定食',cal:880,p:34,f:32,c:108},
-  {name:'生姜焼き定食（1人前）',cat:'定食',cal:760,p:30,f:24,c:100},
-  {name:'ハンバーグ定食（1人前）',cat:'定食',cal:820,p:28,f:30,c:104},
   {name:'ポテトチップス（1袋 60g）',cat:'お菓子',cal:323,p:3,f:20,c:32},
   {name:'チョコレート（1/2枚 30g）',cat:'お菓子',cal:162,p:2,f:10,c:17},
   {name:'アーモンド（20粒 25g）',cat:'お菓子',cal:148,p:5,f:13,c:4},
-  {name:'おせんべい（2枚 20g）',cat:'お菓子',cal:78,p:1.5,f:0.6,c:17},
-  {name:'ショートケーキ（1ピース）',cat:'お菓子',cal:350,p:5,f:16,c:46},
   {name:'コーラ（500ml）',cat:'飲み物',cal:225,p:0,f:0,c:56},
-  {name:'スポーツドリンク（500ml）',cat:'飲み物',cal:130,p:0,f:0,c:32},
   {name:'カフェラテ（M）',cat:'飲み物',cal:120,p:5,f:5,c:13},
   {name:'ブラックコーヒー（1杯）',cat:'飲み物',cal:5,p:0.3,f:0,c:0.7},
-  {name:'ビール（350ml）',cat:'飲み物',cal:140,p:1,f:0,c:11},
-  {name:'豆乳（200ml）',cat:'飲み物',cal:90,p:6.4,f:4,c:7},
   {name:'ホエイプロテイン（1杯 30g）',cat:'プロテイン',cal:120,p:24,f:1.5,c:3},
-  {name:'ソイプロテイン（1杯 30g）',cat:'プロテイン',cal:112,p:22,f:1,c:4},
   {name:'プロテインバー（1本）',cat:'プロテイン',cal:200,p:20,f:7,c:16},
   {name:'ゆで鶏むね肉（100g）',cat:'プロテイン',cal:116,p:23,f:1.9,c:0},
 ];
 const CATEGORIES=['すべて','主食','和食','洋食','肉・魚','野菜','乳製品','果物','外食','コンビニ','定食','お菓子','飲み物','プロテイン'];
 let currentCat='すべて';
 
+// 運動プリセット
+const EX_PRESETS=[
+  {name:'ウォーキング',icon:'🚶',kcalPerMin:4,stepsPerMin:100},
+  {name:'ジョギング',icon:'🏃',kcalPerMin:8,stepsPerMin:160},
+  {name:'ランニング',icon:'🏃‍♂️',kcalPerMin:11,stepsPerMin:180},
+  {name:'筋トレ',icon:'💪',kcalPerMin:6,stepsPerMin:0},
+  {name:'水泳',icon:'🏊',kcalPerMin:9,stepsPerMin:0},
+  {name:'サイクリング',icon:'🚴',kcalPerMin:7,stepsPerMin:0},
+  {name:'HIIT',icon:'⚡',kcalPerMin:12,stepsPerMin:0},
+  {name:'ヨガ',icon:'🧘',kcalPerMin:3,stepsPerMin:0},
+  {name:'縄跳び',icon:'🪢',kcalPerMin:10,stepsPerMin:120},
+];
+let selectedExPreset=null;
+
 // ══════════════════════════════════════════════════════════
-// アプリ状態
+// 状態
 // ══════════════════════════════════════════════════════════
-const pageTitles={food:'食事',body:'体重・体脂肪',calendar:'記録カレンダー',goal:'目標',settings:'設定'};
+const pageTitles={food:'食事',burn:'消費カロリー',body:'体重・体脂肪',calendar:'記録カレンダー',goal:'目標',settings:'設定'};
 const dotClass={'朝食':'dot-morning','昼食':'dot-lunch','夕食':'dot-dinner','間食':'dot-snack'};
-let meals=[],foodHistory=[],bodyRecords=[];
-let allMealsLog={};  // {YYYY-MM-DD: [meals]}
+let meals=[],foodHistory=[],bodyRecords=[],allMealsLog={};
+let exercises=[]; // 今日の運動
+let allExerciseLog={}; // {date: [exercises]}
+let burnSettings={basal:1600,activeTarget:500,stepsTarget:8000};
 let targets={cal:0,p:0,f:0,c:0};
 let manualTargets={cal:null,p:null,f:null,c:null};
 let goalData=null,goalResult=null;
-let weightChart,fatChart;
+let weightChart,fatChart,weeklyBurnChart;
 let wizardStep=1,wizardState={};
-let currentMode='db';
+let currentMode='db',currentExMode='preset';
 let calYear,calMonth,calSelectedDate;
+let viewingDate=null; // null = today, string = YYYY-MM-DD of other day
 
-// ── ストレージ ────────────────────────────────────────────
 function todayStr(){return new Date().toISOString().split('T')[0];}
+
 function load(){
   try{allMealsLog=JSON.parse(localStorage.getItem('all_meals_log')||'{}');}catch(e){allMealsLog={};}
-  // 今日の食事を allMealsLog から復元（後方互換）
+  try{allExerciseLog=JSON.parse(localStorage.getItem('all_exercise_log')||'{}');}catch(e){allExerciseLog={};}
+  try{burnSettings=JSON.parse(localStorage.getItem('burn_settings')||JSON.stringify(burnSettings));}catch(e){}
   const td=todayStr();
   const lastDate=localStorage.getItem('last_date');
   const todayDateStr=new Date().toDateString();
   if(lastDate!==todayDateStr){
-    // 日が変わったら昨日の食事を保存
-    try{
-      const oldMeals=JSON.parse(localStorage.getItem('meals_today')||'[]');
-      if(oldMeals.length>0&&lastDate){
-        // lastDateはtoDateString形式なので変換
-        const d=new Date(lastDate);
-        if(!isNaN(d)){
-          const oldDateStr=d.toISOString().split('T')[0];
-          if(!allMealsLog[oldDateStr]||allMealsLog[oldDateStr].length===0)allMealsLog[oldDateStr]=oldMeals;
-        }
-      }
-    }catch(e){}
-    meals=[];
-    localStorage.setItem('meals_today','[]');
+    try{const om=JSON.parse(localStorage.getItem('meals_today')||'[]');if(om.length>0&&lastDate){const d=new Date(lastDate);if(!isNaN(d)){const s=d.toISOString().split('T')[0];if(!allMealsLog[s]||allMealsLog[s].length===0)allMealsLog[s]=om;}}}catch(e){}
+    try{const oe=JSON.parse(localStorage.getItem('exercises_today')||'[]');if(oe.length>0&&lastDate){const d=new Date(lastDate);if(!isNaN(d)){const s=d.toISOString().split('T')[0];if(!allExerciseLog[s])allExerciseLog[s]=oe;}}}catch(e){}
+    meals=[];exercises=[];
+    localStorage.setItem('meals_today','[]');localStorage.setItem('exercises_today','[]');
     localStorage.setItem('last_date',todayDateStr);
-    saveAllMealsLog();
+    saveAllLogs();
   }else{
     try{meals=JSON.parse(localStorage.getItem('meals_today')||'[]');}catch(e){meals=[];}
-    // 今日のログとも同期
+    try{exercises=JSON.parse(localStorage.getItem('exercises_today')||'[]');}catch(e){exercises=[];}
     if(meals.length>0)allMealsLog[td]=meals;
+    if(exercises.length>0)allExerciseLog[td]=exercises;
   }
   try{foodHistory=JSON.parse(localStorage.getItem('food_history')||'[]');}catch(e){foodHistory=[];}
   try{bodyRecords=JSON.parse(localStorage.getItem('body_records')||'[]');}catch(e){bodyRecords=[];}
   try{const t=JSON.parse(localStorage.getItem('manual_targets')||'null');if(t)manualTargets=t;}catch(e){}
   try{goalData=JSON.parse(localStorage.getItem('goal_data')||'null');}catch(e){}
-  if(goalData)goalResult=calcGoalTargets(goalData);
+  if(goalData){goalResult=calcGoalTargets(goalData);if(!manualTargets.cal)burnSettings.basal=Math.round(goalResult.tdee/1.55);}
   applyTargets();
 }
-function saveMeals(){
-  localStorage.setItem('meals_today',JSON.stringify(meals));
-  const td=todayStr();
-  allMealsLog[td]=meals;
-  saveAllMealsLog();
-}
-function saveAllMealsLog(){localStorage.setItem('all_meals_log',JSON.stringify(allMealsLog));}
+function saveMeals(){localStorage.setItem('meals_today',JSON.stringify(meals));const td=todayStr();allMealsLog[td]=meals;saveAllLogs();}
+function saveExercises(){localStorage.setItem('exercises_today',JSON.stringify(exercises));const td=todayStr();allExerciseLog[td]=exercises;saveAllLogs();}
+function saveAllLogs(){localStorage.setItem('all_meals_log',JSON.stringify(allMealsLog));localStorage.setItem('all_exercise_log',JSON.stringify(allExerciseLog));}
 function saveHistory(){localStorage.setItem('food_history',JSON.stringify(foodHistory));}
 function saveBodyRecords(){localStorage.setItem('body_records',JSON.stringify(bodyRecords));}
+function saveBurnSettings(){
+  burnSettings.basal=parseInt(document.getElementById('bsBasal').value)||1600;
+  burnSettings.activeTarget=parseInt(document.getElementById('bsActiveTarget').value)||500;
+  burnSettings.stepsTarget=parseInt(document.getElementById('bsStepsTarget').value)||8000;
+  localStorage.setItem('burn_settings',JSON.stringify(burnSettings));
+  closeSheet('burnSettings');updateBurnPage();showToast('保存しました');
+}
 function saveManualTargets(){manualTargets.cal=document.getElementById('stgCal').value?parseInt(document.getElementById('stgCal').value):null;manualTargets.p=document.getElementById('stgP').value?parseInt(document.getElementById('stgP').value):null;manualTargets.f=document.getElementById('stgF').value?parseInt(document.getElementById('stgF').value):null;manualTargets.c=document.getElementById('stgC').value?parseInt(document.getElementById('stgC').value):null;localStorage.setItem('manual_targets',JSON.stringify(manualTargets));applyTargets();showToast('設定を保存しました');}
 function applyTargets(){const base=goalResult||{cal:2000,p:150,f:60,c:200};targets.cal=manualTargets.cal??base.cal;targets.p=manualTargets.p??base.p;targets.f=manualTargets.f??base.f;targets.c=manualTargets.c??base.c;['P','F','C'].forEach(k=>{const el=document.getElementById('dispTgt'+k);if(el)el.textContent=targets[k.toLowerCase()];});updateSummary();}
 
 // ── DB検索 ────────────────────────────────────────────────
 function initCatChips(){const el=document.getElementById('catChips');el.innerHTML=CATEGORIES.map(c=>`<div class="cat-chip${c===currentCat?' active':''}" onclick="selectCat('${c}')">${c}</div>`).join('');}
 function selectCat(cat){currentCat=cat;document.querySelectorAll('.cat-chip').forEach(el=>{el.classList.toggle('active',el.textContent===cat);});dbSearch(document.getElementById('dbSearchInput').value);}
-function dbSearch(q){const resultsEl=document.getElementById('dbResults');const query=q.trim().toLowerCase();let items=currentCat==='すべて'?FOOD_DB:FOOD_DB.filter(f=>f.cat===currentCat);if(query){items=items.filter(f=>f.name.toLowerCase().includes(query));}else{items=items.slice(0,20);}if(items.length===0){resultsEl.innerHTML='<div class="db-no-result">見つかりませんでした。手動タブで入力できます</div>';return;}resultsEl.innerHTML=`<div class="db-results">${items.slice(0,15).map(f=>`<div class="db-result-item" onclick="selectDbFood(${FOOD_DB.indexOf(f)})"><div><div class="db-result-name">${f.name}</div><div class="db-result-meta">P ${f.p}g · F ${f.f}g · C ${f.c}g</div></div><div class="db-result-cal">${f.cal}kcal</div></div>`).join('')}</div>`;}
-function selectDbFood(idx){const f=FOOD_DB[idx];document.getElementById('inName').value=f.name;document.getElementById('inCal').value=f.cal;document.getElementById('inP').value=f.p;document.getElementById('inF').value=f.f;document.getElementById('inC').value=f.c;document.getElementById('dbResults').innerHTML='';document.getElementById('dbSelected').style.display='block';document.getElementById('dbSelected').innerHTML=`<div class="db-selected"><div class="db-selected-name">✓ ${f.name}</div><div class="db-selected-macros"><div><div class="db-selected-macro-val" style="color:var(--accent)">${f.cal}</div><div class="db-selected-macro-label">kcal</div></div><div><div class="db-selected-macro-val" style="color:var(--accent2)">${f.p}g</div><div class="db-selected-macro-label">タンパク質</div></div><div><div class="db-selected-macro-val" style="color:var(--amber)">${f.f}g</div><div class="db-selected-macro-label">脂質</div></div><div><div class="db-selected-macro-val" style="color:var(--blue)">${f.c}g</div><div class="db-selected-macro-label">炭水化物</div></div></div></div>`;showToast('値を反映しました');document.getElementById('inName').scrollIntoView({behavior:'smooth',block:'center'});}
-function setMode(mode){currentMode=mode;['db','hist','manual'].forEach(m=>{document.getElementById('mode'+m.charAt(0).toUpperCase()+m.slice(1)).style.display=m===mode?'block':'none';document.getElementById('tab'+m.charAt(0).toUpperCase()+m.slice(1)).classList.toggle('active',m===mode);});if(mode==='hist')renderHistChips();}
-function renderHistChips(){const scroll=document.getElementById('histScroll');if(foodHistory.length===0){document.getElementById('modeHist').innerHTML='<div style="color:var(--text3);font-size:13px;padding:12px 0">まだ履歴がありません</div>';return;}scroll.innerHTML=foodHistory.slice(0,15).map((f,i)=>`<div class="hist-chip" onclick="selectHist(${i})">${f.name}</div>`).join('');}
+function dbSearch(q){const resultsEl=document.getElementById('dbResults');const query=q.trim().toLowerCase();let items=currentCat==='すべて'?FOOD_DB:FOOD_DB.filter(f=>f.cat===currentCat);if(query){items=items.filter(f=>f.name.toLowerCase().includes(query));}else{items=items.slice(0,20);}if(items.length===0){resultsEl.innerHTML='<div class="db-no-result">見つかりませんでした</div>';return;}resultsEl.innerHTML=`<div class="db-results">${items.slice(0,15).map(f=>`<div class="db-result-item" onclick="selectDbFood(${FOOD_DB.indexOf(f)})"><div><div class="db-result-name">${f.name}</div><div class="db-result-meta">P ${f.p}g · F ${f.f}g · C ${f.c}g</div></div><div class="db-result-cal">${f.cal}kcal</div></div>`).join('')}</div>`;}
+function selectDbFood(idx){const f=FOOD_DB[idx];document.getElementById('inName').value=f.name;document.getElementById('inCal').value=f.cal;document.getElementById('inP').value=f.p;document.getElementById('inF').value=f.f;document.getElementById('inC').value=f.c;document.getElementById('dbResults').innerHTML='';document.getElementById('dbSelected').style.display='block';document.getElementById('dbSelected').innerHTML=`<div class="db-selected"><div class="db-selected-name">✓ ${f.name}</div><div class="db-selected-macros"><div><div class="db-sel-val" style="color:var(--accent)">${f.cal}</div><div class="db-sel-label">kcal</div></div><div><div class="db-sel-val" style="color:var(--accent2)">${f.p}g</div><div class="db-sel-label">タンパク質</div></div><div><div class="db-sel-val" style="color:var(--amber)">${f.f}g</div><div class="db-sel-label">脂質</div></div><div><div class="db-sel-val" style="color:var(--blue)">${f.c}g</div><div class="db-sel-label">炭水化物</div></div></div></div>`;showToast('値を反映しました');document.getElementById('inName').scrollIntoView({behavior:'smooth',block:'center'});}
+function setMode(mode){currentMode=mode;['db','hist','manual'].forEach(m=>{document.getElementById('mode'+m.charAt(0).toUpperCase()+m.slice(1)).style.display=m===mode?'block':'none';document.getElementById('tab'+m.charAt(0).toUpperCase()+m.slice(1)).classList.toggle('active',m===mode);});if(mode==='hist'){const scroll=document.getElementById('histScroll');if(foodHistory.length===0){document.getElementById('modeHist').innerHTML='<div style="color:var(--text3);font-size:13px;padding:12px 0">まだ履歴がありません</div>';return;}scroll.innerHTML=foodHistory.slice(0,15).map((f,i)=>`<div class="hist-chip" onclick="selectHist(${i})">${f.name}</div>`).join('');}}
 function selectHist(i){const f=foodHistory[i];document.getElementById('inName').value=f.name;document.getElementById('inCal').value=f.cal;document.getElementById('inP').value=f.p;document.getElementById('inF').value=f.f;document.getElementById('inC').value=f.c;showToast('履歴から入力しました');}
 
-// ── ページ切り替え ─────────────────────────────────────────
-function switchPage(name,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');document.getElementById('pageTitle').textContent=pageTitles[name];if(name==='body')setTimeout(renderCharts,50);if(name==='goal')renderGoalPage();if(name==='calendar')renderCalendar();}
+// ── 運動プリセット ─────────────────────────────────────────
+function initExPresets(){
+  const grid=document.getElementById('exPresetGrid');
+  grid.innerHTML=EX_PRESETS.map((e,i)=>`<div class="ex-preset-btn" id="exp${i}" onclick="selectExPreset(${i})"><div class="ex-preset-icon">${e.icon}</div><div class="ex-preset-name">${e.name}</div><div class="ex-preset-kcal">${e.kcalPerMin}kcal/分</div></div>`).join('');
+}
+function selectExPreset(i){
+  selectedExPreset=i;
+  document.querySelectorAll('.ex-preset-btn').forEach((el,idx)=>el.classList.toggle('selected',idx===i));
+  updateExCalPreview();
+}
+function updateExCalPreview(){
+  if(selectedExPreset===null)return;
+  const dur=parseInt(document.getElementById('exDuration').value)||0;
+  const preset=EX_PRESETS[selectedExPreset];
+  const cal=Math.round(preset.kcalPerMin*dur);
+  document.getElementById('exCalPreview').style.display=dur>0?'block':'none';
+  document.getElementById('exCalPreviewVal').textContent=cal;
+}
+function setExMode(mode){
+  currentExMode=mode;
+  document.getElementById('exModePreset').style.display=mode==='preset'?'block':'none';
+  document.getElementById('exModeManual').style.display=mode==='manual'?'block':'none';
+  document.getElementById('tabExPreset').classList.toggle('active',mode==='preset');
+  document.getElementById('tabExManual').classList.toggle('active',mode==='manual');
+}
 
+// ── ページ切り替え ─────────────────────────────────────────
+function switchPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('pageTitle').textContent=pageTitles[name];
+  if(name==='body'){setTimeout(renderBodyCharts,50);loadViewingDateBody();}
+  if(name==='food')loadViewingDateFood();
+  if(name==='goal')renderGoalPage();
+  if(name==='calendar')renderCalendar();
+  if(name==='burn'){setTimeout(()=>{updateBurnPage();renderWeeklyBurnChart();},50);}
+}
 function openSheet(type){
   if(type==='meal'){['inName','inCal','inP','inF','inC'].forEach(id=>document.getElementById(id).value='');document.getElementById('dbSearchInput').value='';document.getElementById('dbResults').innerHTML='';document.getElementById('dbSelected').style.display='none';setMode('db');initCatChips();dbSearch('');document.getElementById('mealSheet').classList.add('open');}
+  else if(type==='exercise'){selectedExPreset=null;document.getElementById('exDuration').value='';document.getElementById('exSteps').value='';document.getElementById('exCalPreview').style.display='none';setExMode('preset');initExPresets();document.getElementById('exerciseSheet').classList.add('open');}
+  else if(type==='burnSettings'){document.getElementById('bsBasal').value=burnSettings.basal;document.getElementById('bsActiveTarget').value=burnSettings.activeTarget;document.getElementById('bsStepsTarget').value=burnSettings.stepsTarget;document.getElementById('burnSettingsSheet').classList.add('open');}
   else if(type==='body'){document.getElementById('inDate').value=todayStr();document.getElementById('inWeight').value='';document.getElementById('inBodyFat').value='';document.getElementById('bodySheet').classList.add('open');}
   else if(type==='goal'){wizardStep=1;wizardState={};renderWizard();document.getElementById('goalSheet').classList.add('open');}
 }
-function closeSheet(type){document.getElementById(type+'Sheet').classList.remove('open');}
+function closeSheet(type){const map={meal:'mealSheet',exercise:'exerciseSheet',burnSettings:'burnSettingsSheet',body:'bodySheet',goal:'goalSheet',datePicker:'datePickerSheet',dayDetail:'dayDetailSheet'};const id=map[type]||type+'Sheet';document.getElementById(id).classList.remove('open');}
+
+// ── 日付ピッカー ───────────────────────────────────────────
+function openDatePicker(){
+  // 食事か体重ページにいるときだけ有効
+  const activePage=document.querySelector('.page.active')?.id;
+  if(!activePage||activePage==='page-burn'||activePage==='page-calendar'||activePage==='page-goal'||activePage==='page-settings')return;
+  document.getElementById('dpDateInput').value=viewingDate||todayStr();
+  const titleMap={'page-food':'食事の日付を選択','page-body':'体重記録の日付を選択'};
+  document.getElementById('datePickerTitle').textContent=titleMap[activePage]||'日付を選択';
+  document.getElementById('datePickerSheet').classList.add('open');
+}
+function applyDatePicker(){
+  const d=document.getElementById('dpDateInput').value;
+  if(!d)return;
+  const activePage=document.querySelector('.page.active')?.id;
+  closeSheet('datePicker');
+  if(d===todayStr()){
+    backToToday(activePage==='page-food'?'food':'body');
+    return;
+  }
+  viewingDate=d;
+  if(activePage==='page-food')loadViewingDateFood();
+  else if(activePage==='page-body')loadViewingDateBody();
+}
+function backToToday(page){
+  viewingDate=null;
+  if(page==='food')loadViewingDateFood();
+  else if(page==='body')loadViewingDateBody();
+}
+function loadViewingDateFood(){
+  const td=todayStr();
+  const isToday=!viewingDate||viewingDate===td;
+  const dateStr=viewingDate||td;
+  // バナー更新
+  const banner=document.getElementById('foodDateBanner');
+  const badge=document.getElementById('dateBadge');
+  if(isToday){
+    banner.style.display='none';
+    badge.classList.remove('other-day');
+    badge.textContent=`${new Date().getMonth()+1}/${new Date().getDate()}`;
+    // 今日のデータに戻す
+    meals=JSON.parse(localStorage.getItem('meals_today')||'[]');
+    document.getElementById('foodSecTitle').textContent='今日の食事';
+  }else{
+    const d=new Date(dateStr);
+    banner.style.display='flex';
+    document.getElementById('foodDateBannerLabel').textContent=`📅 ${d.getMonth()+1}/${d.getDate()} の記録を表示中`;
+    badge.classList.add('other-day');
+    badge.textContent=`${d.getMonth()+1}/${d.getDate()}`;
+    // 別日のデータを読み込む
+    meals=allMealsLog[dateStr]||[];
+    document.getElementById('foodSecTitle').textContent=`${d.getMonth()+1}月${d.getDate()}日の食事`;
+  }
+  renderMeals();
+  updateSummary();
+}
+function loadViewingDateBody(){
+  const td=todayStr();
+  const isToday=!viewingDate||viewingDate===td;
+  const dateStr=viewingDate||td;
+  const banner=document.getElementById('bodyDateBanner');
+  const badge=document.getElementById('dateBadge');
+  if(isToday){
+    banner.style.display='none';
+    badge.classList.remove('other-day');
+    badge.textContent=`${new Date().getMonth()+1}/${new Date().getDate()}`;
+  }else{
+    const d=new Date(dateStr);
+    banner.style.display='flex';
+    document.getElementById('bodyDateBannerLabel').textContent=`📅 ${d.getMonth()+1}/${d.getDate()} の記録を表示中`;
+    badge.classList.add('other-day');
+    badge.textContent=`${d.getMonth()+1}/${d.getDate()}`;
+  }
+}
+
+// ── カレンダー日付詳細シート ──────────────────────────────
+function openDayDetailSheet(dateStr){
+  const dayMeals=allMealsLog[dateStr]||[];
+  const bodyRec=bodyRecords.find(r=>r.date===dateStr);
+  const dayEx=allExerciseLog[dateStr]||[];
+  const[y,m,d]=dateStr.split('-');
+  const isToday=dateStr===todayStr();
+  const dateLabel=`${parseInt(m)}月${parseInt(d)}日（${['日','月','火','水','木','金','土'][new Date(dateStr).getDay()]}）`;
+  const tot=dayMeals.reduce((a,m)=>({cal:a.cal+m.cal,p:a.p+m.p,f:a.f+m.f,c:a.c+m.c}),{cal:0,p:0,f:0,c:0});
+  const exActive=dayEx.reduce((s,e)=>s+e.cal,0);
+  const exSteps=dayEx.reduce((s,e)=>s+e.steps,0);
+  const totalBurn=burnSettings.basal+exActive;
+  const netCal=Math.round(tot.cal-totalBurn);
+  const hasAny=dayMeals.length>0||bodyRec||dayEx.length>0;
+
+  let html=`<div style="font-size:17px;font-weight:700;margin-bottom:4px">${dateLabel}</div>`;
+  if(isToday)html+=`<div style="font-size:12px;color:var(--accent);margin-bottom:16px">今日</div>`;
+  else html+=`<div style="height:12px"></div>`;
+
+  if(!hasAny){
+    html+=`<div style="text-align:center;padding:32px 0;color:var(--text3)">📭 この日の記録はありません</div>`;
+  }else{
+    // 食事サマリー
+    if(dayMeals.length>0){
+      html+=`<div class="day-detail-section"><div class="day-detail-section-title">🍽 食事サマリー</div>
+      <div class="day-macro-row">
+        <div class="day-macro-item"><div class="day-macro-val" style="color:var(--accent)">${Math.round(tot.cal)}</div><div class="day-macro-label">kcal</div></div>
+        <div class="day-macro-item"><div class="day-macro-val" style="color:var(--accent2)">${Math.round(tot.p)}g</div><div class="day-macro-label">タンパク質</div></div>
+        <div class="day-macro-item"><div class="day-macro-val" style="color:var(--amber)">${Math.round(tot.f)}g</div><div class="day-macro-label">脂質</div></div>
+        <div class="day-macro-item"><div class="day-macro-val" style="color:var(--blue)">${Math.round(tot.c)}g</div><div class="day-macro-label">炭水化物</div></div>
+      </div></div>`;
+      html+=`<div class="day-detail-section"><div class="day-detail-section-title">📋 食事一覧</div>`;
+      html+=dayMeals.map(m=>`<div class="day-meal-item"><div><div style="font-size:14px">${m.name}</div><div style="font-size:11px;color:var(--text3)">${m.time}　P ${m.p}g · F ${m.f}g · C ${m.c}g</div></div><div style="font-size:14px;font-weight:600;color:var(--accent)">${m.cal}kcal</div></div>`).join('');
+      html+=`</div>`;
+    }
+    // 運動記録
+    if(dayEx.length>0){
+      html+=`<div class="day-detail-section"><div class="day-detail-section-title">🔥 運動記録</div>`;
+      html+=dayEx.map(e=>`<div class="day-meal-item"><div><div style="font-size:14px">${e.name}</div><div style="font-size:11px;color:var(--text3)">${e.duration}分${e.steps>0?' · '+e.steps.toLocaleString()+'歩':''}</div></div><div style="font-size:14px;font-weight:600;color:var(--amber)">${e.cal}kcal</div></div>`).join('');
+      if(exSteps>0)html+=`<div style="font-size:12px;color:var(--text2);margin-top:6px">合計歩数: ${exSteps.toLocaleString()}歩</div>`;
+      html+=`</div>`;
+    }
+    // カロリー収支
+    if(dayMeals.length>0){
+      html+=`<div class="day-detail-section"><div class="day-detail-section-title">⚖️ カロリー収支</div>
+      <div class="day-balance-card">
+        <div>
+          <div style="font-size:12px;color:var(--text2)">摂取 ${Math.round(tot.cal)} − 消費 ${totalBurn}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">基礎代謝 ${burnSettings.basal}${exActive>0?' + 運動 '+exActive:''} kcal</div>
+        </div>
+        <div style="font-size:24px;font-weight:700;color:${netCal<=0?'#1D9E75':'#E24B4A'}">${netCal>0?'+':''}${netCal}<span style="font-size:13px;font-weight:400"> kcal</span></div>
+      </div></div>`;
+    }
+    // 体重・体脂肪
+    if(bodyRec){
+      html+=`<div class="day-detail-section"><div class="day-detail-section-title">⚖️ 体重・体脂肪</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">`;
+      if(bodyRec.weight!==null)html+=`<div style="background:var(--bg3);border-radius:8px;padding:12px;text-align:center"><div style="font-size:24px;font-weight:700;color:var(--accent)">${bodyRec.weight.toFixed(1)}</div><div style="font-size:11px;color:var(--text2);margin-top:2px">体重 kg</div></div>`;
+      if(bodyRec.fat!==null)html+=`<div style="background:var(--bg3);border-radius:8px;padding:12px;text-align:center"><div style="font-size:24px;font-weight:700;color:var(--accent2)">${bodyRec.fat.toFixed(1)}</div><div style="font-size:11px;color:var(--text2);margin-top:2px">体脂肪率 %</div></div>`;
+      html+=`</div></div>`;
+    }
+  }
+  // 別日入力ボタン
+  html+=`<div style="margin-top:8px;display:flex;gap:8px">
+    <button onclick="jumpToDateFood('${dateStr}')" style="flex:1;background:rgba(127,119,221,0.15);border:0.5px solid var(--accent);border-radius:var(--radius-sm);padding:11px;font-size:13px;color:var(--accent);cursor:pointer">🍽 食事を追加</button>
+    <button onclick="jumpToDateBody('${dateStr}')" style="flex:1;background:rgba(29,158,117,0.15);border:0.5px solid var(--accent2);border-radius:var(--radius-sm);padding:11px;font-size:13px;color:var(--accent2);cursor:pointer">⚖️ 体重を記録</button>
+  </div>`;
+
+  document.getElementById('dayDetailContent').innerHTML=html;
+  document.getElementById('dayDetailSheet').classList.add('open');
+}
+function jumpToDateFood(dateStr){
+  closeSheet('dayDetail');
+  viewingDate=dateStr===todayStr()?null:dateStr;
+  // 食事タブに移動
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-food').classList.add('active');
+  document.querySelector('.tab-item').classList.add('active');
+  document.getElementById('pageTitle').textContent='食事';
+  loadViewingDateFood();
+  openSheet('meal');
+}
+function jumpToDateBody(dateStr){
+  closeSheet('dayDetail');
+  viewingDate=dateStr===todayStr()?null:dateStr;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-body').classList.add('active');
+  document.querySelectorAll('.tab-item')[2].classList.add('active');
+  document.getElementById('pageTitle').textContent='体重・体脂肪';
+  loadViewingDateBody();
+  // 体重シートを開いて日付をプリセット
+  document.getElementById('inDate').value=dateStr;
+  document.getElementById('inWeight').value='';
+  document.getElementById('inBodyFat').value='';
+  document.getElementById('bodySheet').classList.add('open');
+}
 
 // ── 食事 ──────────────────────────────────────────────────
-function addMeal(){const name=document.getElementById('inName').value.trim();if(!name){showToast('食品名を入力してください');return;}const meal={id:Date.now(),name,time:document.getElementById('inTime').value,cal:parseFloat(document.getElementById('inCal').value)||0,p:parseFloat(document.getElementById('inP').value)||0,f:parseFloat(document.getElementById('inF').value)||0,c:parseFloat(document.getElementById('inC').value)||0};meals.push(meal);if(!foodHistory.find(h=>h.name===name)){foodHistory.unshift({name,cal:meal.cal,p:meal.p,f:meal.f,c:meal.c});if(foodHistory.length>50)foodHistory.pop();saveHistory();}saveMeals();closeSheet('meal');renderMeals();updateSummary();showToast('追加しました');}
-function deleteMeal(id){meals=meals.filter(m=>m.id!==id);saveMeals();renderMeals();updateSummary();}
+function addMeal(){
+  const name=document.getElementById('inName').value.trim();
+  if(!name){showToast('食品名を入力してください');return;}
+  const meal={id:Date.now(),name,time:document.getElementById('inTime').value,cal:parseFloat(document.getElementById('inCal').value)||0,p:parseFloat(document.getElementById('inP').value)||0,f:parseFloat(document.getElementById('inF').value)||0,c:parseFloat(document.getElementById('inC').value)||0};
+  const td=todayStr();
+  const targetDate=viewingDate||td;
+  if(targetDate===td){
+    meals.push(meal);
+    saveMeals();
+  }else{
+    const dayMeals=allMealsLog[targetDate]||[];
+    dayMeals.push(meal);
+    allMealsLog[targetDate]=dayMeals;
+    saveAllLogs();
+    meals=dayMeals; // sync display
+  }
+  if(!foodHistory.find(h=>h.name===name)){foodHistory.unshift({name,cal:meal.cal,p:meal.p,f:meal.f,c:meal.c});if(foodHistory.length>50)foodHistory.pop();saveHistory();}
+  closeSheet('meal');renderMeals();updateSummary();showToast('追加しました');
+}
+function deleteMeal(id){
+  const td=todayStr();
+  const targetDate=viewingDate||td;
+  if(targetDate===td){
+    meals=meals.filter(m=>m.id!==id);saveMeals();
+  }else{
+    const dayMeals=(allMealsLog[targetDate]||[]).filter(m=>m.id!==id);
+    allMealsLog[targetDate]=dayMeals;saveAllLogs();meals=dayMeals;
+  }
+  renderMeals();updateSummary();
+}
 function renderMeals(){const list=document.getElementById('mealList');if(meals.length===0){list.innerHTML='<div class="empty-state"><div class="empty-icon">🍽</div>今日の食事を記録しよう</div>';return;}list.innerHTML=meals.map(m=>`<div class="meal-card"><div class="meal-dot ${dotClass[m.time]||'dot-snack'}"></div><div class="meal-info"><div class="meal-name">${m.name}</div><div class="meal-meta">${m.time}　P ${m.p}g · F ${m.f}g · C ${m.c}g</div></div><div class="meal-kcal">${m.cal}<span style="font-size:11px;color:var(--text2)">kcal</span></div><button class="del-btn-small" onclick="deleteMeal(${m.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg></button></div>`).join('');}
 function updateSummary(){const tot=meals.reduce((a,m)=>({cal:a.cal+m.cal,p:a.p+m.p,f:a.f+m.f,c:a.c+m.c}),{cal:0,p:0,f:0,c:0});document.getElementById('sumCal').textContent=Math.round(tot.cal);document.getElementById('sumP').textContent=Math.round(tot.p);document.getElementById('sumF').textContent=Math.round(tot.f);document.getElementById('sumC').textContent=Math.round(tot.c);const remain=Math.max(0,targets.cal-Math.round(tot.cal));document.getElementById('calRemain').textContent=targets.cal?remain:'—';const calPct=targets.cal?Math.min(1,tot.cal/targets.cal):0;document.getElementById('calRing').setAttribute('stroke-dashoffset',(213.6*(1-calPct)).toFixed(1));[['barP',tot.p,targets.p],['barF',tot.f,targets.f],['barC',tot.c,targets.c]].forEach(([id,v,t])=>{document.getElementById(id).style.width=(t?Math.min(100,Math.round(v/t*100)):0)+'%';});['P','F','C'].forEach(k=>{const el=document.getElementById('dispTgt'+k);if(el)el.textContent=targets[k.toLowerCase()]||'—';});}
 
+// ── 運動 ──────────────────────────────────────────────────
+function addExercise(){
+  let name,cal,duration,steps=parseInt(document.getElementById('exSteps').value)||0;
+  if(currentExMode==='preset'){
+    if(selectedExPreset===null){showToast('種目を選んでください');return;}
+    duration=parseInt(document.getElementById('exDuration').value)||0;
+    if(duration<=0){showToast('時間を入力してください');return;}
+    const preset=EX_PRESETS[selectedExPreset];
+    name=preset.name;
+    cal=Math.round(preset.kcalPerMin*duration);
+    if(steps===0)steps=Math.round(preset.stepsPerMin*duration);
+  }else{
+    name=document.getElementById('exNameManual').value.trim();
+    if(!name){showToast('運動名を入力してください');return;}
+    duration=parseInt(document.getElementById('exDurationManual').value)||0;
+    cal=parseInt(document.getElementById('exCalManual').value)||0;
+    if(cal<=0){showToast('消費カロリーを入力してください');return;}
+  }
+  const ex={id:Date.now(),name,duration,cal,steps};
+  exercises.push(ex);
+  saveExercises();
+  closeSheet('exercise');
+  renderExerciseList();
+  updateBurnPage();
+  showToast('記録しました');
+}
+function deleteExercise(id){exercises=exercises.filter(e=>e.id!==id);saveExercises();renderExerciseList();updateBurnPage();}
+function renderExerciseList(){
+  const list=document.getElementById('exerciseList');
+  if(exercises.length===0){list.innerHTML='<div class="empty-state"><div class="empty-icon">🏃</div>運動を記録しよう</div>';return;}
+  list.innerHTML=exercises.map(e=>`<div class="exercise-card"><div class="exercise-icon">${EX_PRESETS.find(p=>p.name===e.name)?.icon||'🏋️'}</div><div class="exercise-info"><div class="exercise-name">${e.name}</div><div class="exercise-meta">${e.duration}分${e.steps>0?' · '+e.steps.toLocaleString()+'歩':''}</div></div><div class="exercise-cal">${e.cal} kcal</div><button class="del-btn-small" onclick="deleteExercise(${e.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg></button></div>`).join('');}
+
+// ── 消費カロリーページ更新 ────────────────────────────────
+function updateBurnPage(){
+  const activeCal=exercises.reduce((s,e)=>s+e.cal,0);
+  const totalSteps=exercises.reduce((s,e)=>s+e.steps,0);
+  const totalBurn=burnSettings.basal+activeCal;
+  const intakeCal=meals.reduce((s,m)=>s+m.cal,0);
+  const netCal=Math.round(intakeCal-totalBurn);
+
+  // 収支表示
+  document.getElementById('netCalDisplay').textContent=(netCal>0?'+':'')+netCal;
+  document.getElementById('netCalDisplay').style.color=netCal<=0?'#1D9E75':'#E24B4A';
+  const statusEl=document.getElementById('netStatusBadge');
+  if(netCal<=-500)statusEl.innerHTML='<span class="badge badge-green">🔥 順調に燃焼中</span>';
+  else if(netCal<=0)statusEl.innerHTML='<span class="badge badge-green">✅ 目標達成！</span>';
+  else if(netCal<=300)statusEl.innerHTML='<span class="badge badge-amber">⚡ もう少し！</span>';
+  else statusEl.innerHTML='<span class="badge badge-red">⚠️ 摂取過多</span>';
+
+  // メインリング（消費達成率）
+  const totalTarget=burnSettings.basal+burnSettings.activeTarget;
+  const burnPct=Math.min(1,totalBurn/totalTarget);
+  document.getElementById('mainBurnRing').setAttribute('stroke-dashoffset',(238.8*(1-burnPct)).toFixed(1));
+  document.getElementById('burnPctLabel').textContent=Math.round(burnPct*100)+'%';
+
+  // アクティブリング
+  const activePct=Math.min(1,activeCal/burnSettings.activeTarget);
+  document.getElementById('activeRing').setAttribute('stroke-dashoffset',(150.8*(1-activePct)).toFixed(1));
+  document.getElementById('activeCalVal').textContent=activeCal;
+  document.getElementById('activeCalTarget').textContent=burnSettings.activeTarget;
+
+  // 基礎代謝リング（常に100%）
+  document.getElementById('basalRing').setAttribute('stroke-dashoffset','0');
+  document.getElementById('basalCalVal').textContent=burnSettings.basal;
+
+  // 歩数リング
+  const stepsPct=Math.min(1,totalSteps/burnSettings.stepsTarget);
+  document.getElementById('stepsRing').setAttribute('stroke-dashoffset',(150.8*(1-stepsPct)).toFixed(1));
+  document.getElementById('stepsVal').textContent=totalSteps.toLocaleString();
+  document.getElementById('stepsTarget').textContent=burnSettings.stepsTarget.toLocaleString();
+
+  // バーグラフ
+  const maxVal=Math.max(intakeCal,totalBurn,targets.cal,totalTarget,500);
+  document.getElementById('intakeBar').style.width=Math.min(100,intakeCal/maxVal*100)+'%';
+  document.getElementById('intakeBarLabel').textContent=`${Math.round(intakeCal)} / ${targets.cal||'—'} kcal`;
+  document.getElementById('burnBar').style.width=Math.min(100,totalBurn/maxVal*100)+'%';
+  document.getElementById('burnBarLabel').textContent=`${totalBurn} / ${totalTarget} kcal`;
+  document.getElementById('activeBar').style.width=Math.min(100,activeCal/maxVal*100)+'%';
+  document.getElementById('activeBarLabel').textContent=`${activeCal} / ${burnSettings.activeTarget} kcal`;
+}
+
+function renderWeeklyBurnChart(){
+  const labels=[],burnData=[],intakeData=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const ds=d.toISOString().split('T')[0];
+    const ml=allMealsLog[ds]||[];
+    const el=allExerciseLog[ds]||[];
+    const intake=ml.reduce((s,m)=>s+m.cal,0);
+    const active=el.reduce((s,e)=>s+e.cal,0);
+    const burn=burnSettings.basal+active;
+    labels.push(ds.slice(5));
+    intakeData.push(Math.round(intake));
+    burnData.push(burn);
+  }
+  if(weeklyBurnChart)weeklyBurnChart.destroy();
+  weeklyBurnChart=new Chart(document.getElementById('weeklyBurnChart'),{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'摂取',data:intakeData,backgroundColor:'rgba(127,119,221,0.7)',borderRadius:4},
+      {label:'消費',data:burnData,backgroundColor:'rgba(239,159,39,0.7)',borderRadius:4},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#999',font:{size:11}}}},scales:{x:{ticks:{color:'#666',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'},border:{color:'rgba(255,255,255,0.1)'}},y:{ticks:{color:'#666',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'},border:{color:'rgba(255,255,255,0.1)'}}}}
+  });
+}
+
 // ── 体重 ──────────────────────────────────────────────────
-function addBodyRecord(){const date=document.getElementById('inDate').value,weight=parseFloat(document.getElementById('inWeight').value),fat=parseFloat(document.getElementById('inBodyFat').value);if(!date){showToast('日付を選択してください');return;}if(isNaN(weight)&&isNaN(fat)){showToast('体重か体脂肪率を入力してください');return;}const existing=bodyRecords.find(r=>r.date===date);if(existing){if(!isNaN(weight))existing.weight=weight;if(!isNaN(fat))existing.fat=fat;}else{bodyRecords.push({date,weight:isNaN(weight)?null:weight,fat:isNaN(fat)?null:fat});bodyRecords.sort((a,b)=>a.date.localeCompare(b.date));}saveBodyRecords();updateBodyStats();closeSheet('body');renderCharts();showToast('記録しました');}
+function addBodyRecord(){const date=document.getElementById('inDate').value,weight=parseFloat(document.getElementById('inWeight').value),fat=parseFloat(document.getElementById('inBodyFat').value);if(!date){showToast('日付を選択してください');return;}if(isNaN(weight)&&isNaN(fat)){showToast('体重か体脂肪率を入力してください');return;}const existing=bodyRecords.find(r=>r.date===date);if(existing){if(!isNaN(weight))existing.weight=weight;if(!isNaN(fat))existing.fat=fat;}else{bodyRecords.push({date,weight:isNaN(weight)?null:weight,fat:isNaN(fat)?null:fat});bodyRecords.sort((a,b)=>a.date.localeCompare(b.date));}saveBodyRecords();updateBodyStats();closeSheet('body');renderBodyCharts();showToast('記録しました');}
 function updateBodyStats(){const ws=bodyRecords.filter(r=>r.weight!==null),fs=bodyRecords.filter(r=>r.fat!==null);if(ws.length>0){document.getElementById('latestWeight').textContent=ws[ws.length-1].weight.toFixed(1);if(ws.length>1){const d=(ws[ws.length-1].weight-ws[ws.length-2].weight).toFixed(1);document.getElementById('weightDiff').textContent=(d>0?'▲':'▼')+Math.abs(d)+' kg';document.getElementById('weightDiff').style.color=d>0?'#E24B4A':'#1D9E75';}}if(fs.length>0){document.getElementById('latestFat').textContent=fs[fs.length-1].fat.toFixed(1);if(fs.length>1){const d=(fs[fs.length-1].fat-fs[fs.length-2].fat).toFixed(1);document.getElementById('fatDiff').textContent=(d>0?'▲':'▼')+Math.abs(d)+' %';document.getElementById('fatDiff').style.color=d>0?'#E24B4A':'#1D9E75';}}}
-function renderCharts(){const labels=bodyRecords.map(r=>r.date.slice(5));const wData=bodyRecords.map(r=>r.weight),fData=bodyRecords.map(r=>r.fat);const baseOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#666',font:{size:10},maxTicksLimit:6,autoSkip:true},grid:{color:'rgba(255,255,255,0.05)'},border:{color:'rgba(255,255,255,0.1)'}},y:{ticks:{color:'#666',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'},border:{color:'rgba(255,255,255,0.1)'}}},elements:{point:{radius:4,hoverRadius:6}}};if(weightChart)weightChart.destroy();weightChart=new Chart(document.getElementById('weightChart'),{type:'line',data:{labels,datasets:[{data:wData,borderColor:'#7F77DD',backgroundColor:'rgba(127,119,221,0.1)',fill:true,tension:0.4,spanGaps:true,pointBackgroundColor:'#7F77DD',borderWidth:2}]},options:{...baseOpts,plugins:{...baseOpts.plugins,tooltip:{callbacks:{label:c=>c.parsed.y!==null?c.parsed.y.toFixed(1)+' kg':''}}}}} );if(fatChart)fatChart.destroy();fatChart=new Chart(document.getElementById('fatChart'),{type:'line',data:{labels,datasets:[{data:fData,borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,0.1)',fill:true,tension:0.4,spanGaps:true,pointBackgroundColor:'#1D9E75',borderWidth:2,borderDash:[4,3]}]},options:{...baseOpts,plugins:{...baseOpts.plugins,tooltip:{callbacks:{label:c=>c.parsed.y!==null?c.parsed.y.toFixed(1)+' %':''}}}}});}
+function renderBodyCharts(){const labels=bodyRecords.map(r=>r.date.slice(5));const wData=bodyRecords.map(r=>r.weight),fData=bodyRecords.map(r=>r.fat);const baseOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#666',font:{size:10},maxTicksLimit:6,autoSkip:true},grid:{color:'rgba(255,255,255,0.05)'},border:{color:'rgba(255,255,255,0.1)'}},y:{ticks:{color:'#666',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'},border:{color:'rgba(255,255,255,0.1)'}}},elements:{point:{radius:4,hoverRadius:6}}};if(weightChart)weightChart.destroy();weightChart=new Chart(document.getElementById('weightChart'),{type:'line',data:{labels,datasets:[{data:wData,borderColor:'#7F77DD',backgroundColor:'rgba(127,119,221,0.1)',fill:true,tension:0.4,spanGaps:true,pointBackgroundColor:'#7F77DD',borderWidth:2}]},options:{...baseOpts,plugins:{...baseOpts.plugins,tooltip:{callbacks:{label:c=>c.parsed.y!==null?c.parsed.y.toFixed(1)+' kg':''}}}}} );if(fatChart)fatChart.destroy();fatChart=new Chart(document.getElementById('fatChart'),{type:'line',data:{labels,datasets:[{data:fData,borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,0.1)',fill:true,tension:0.4,spanGaps:true,pointBackgroundColor:'#1D9E75',borderWidth:2,borderDash:[4,3]}]},options:{...baseOpts,plugins:{...baseOpts.plugins,tooltip:{callbacks:{label:c=>c.parsed.y!==null?c.parsed.y.toFixed(1)+' %':''}}}}}}
 
-// ══════════════════════════════════════════════════════════
-// カレンダー
-// ══════════════════════════════════════════════════════════
-function renderCalendar(){
-  const now=new Date();
-  if(calYear===undefined){calYear=now.getFullYear();calMonth=now.getMonth();}
-  const td=todayStr();
-  if(!calSelectedDate)calSelectedDate=td;
-  renderCalGrid();
-  renderCalDetail(calSelectedDate);
-}
-
-function renderCalGrid(){
-  const now=new Date();
-  const td=todayStr();
-  const firstDay=new Date(calYear,calMonth,1);
-  const lastDay=new Date(calYear,calMonth+1,0);
-  const startDow=firstDay.getDay(); // 0=日
-  const daysInMonth=lastDay.getDate();
-
-  document.getElementById('calMonthLabel').textContent=`${calYear}年${calMonth+1}月`;
-
-  const DAYS=['日','月','火','水','木','金','土'];
-  let html=DAYS.map((d,i)=>`<div class="cal-day-label" style="${i===0?'color:#E24B4A':i===6?'color:#378ADD':''}">${d}</div>`).join('');
-
-  // 空白
-  for(let i=0;i<startDow;i++) html+=`<div class="cal-day empty"></div>`;
-
-  for(let d=1;d<=daysInMonth;d++){
-    const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isToday=dateStr===td;
-    const isSelected=dateStr===calSelectedDate;
-    const dow=(startDow+d-1)%7;
-    const dayMeals=allMealsLog[dateStr]||[];
-    const bodyRec=bodyRecords.find(r=>r.date===dateStr);
-    const hasMeals=dayMeals.length>0;
-    const hasBody=!!bodyRec;
-
-    let dotHtml='';
-    if(hasMeals||hasBody){
-      dotHtml='<div class="cal-dot-row">';
-      if(hasMeals)dotHtml+=`<div class="cal-dot" style="background:var(--accent)"></div>`;
-      if(hasBody)dotHtml+=`<div class="cal-dot" style="background:var(--accent2)"></div>`;
-      dotHtml+='</div>';
-    }
-
-    html+=`<div class="cal-day${isToday?' today':''}${isSelected?' selected':''}" onclick="calSelectDate('${dateStr}')">
-      <div class="cal-day-num" style="${dow===0?'color:var(--red)':dow===6?'color:var(--blue)':''}">${d}</div>
-      ${dotHtml}
-    </div>`;
-  }
-  document.getElementById('calGrid').innerHTML=html;
-}
-
-function calSelectDate(dateStr){
-  calSelectedDate=dateStr;
-  renderCalGrid();
-  renderCalDetail(dateStr);
-}
-
-function calPrevMonth(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalGrid();if(calSelectedDate){const[y,m]=calSelectedDate.split('-').map(Number);if(y!==calYear||m-1!==calMonth){calSelectedDate=null;document.getElementById('calDetail').innerHTML='';}};}
-function calNextMonth(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalGrid();if(calSelectedDate){const[y,m]=calSelectedDate.split('-').map(Number);if(y!==calYear||m-1!==calMonth){calSelectedDate=null;document.getElementById('calDetail').innerHTML='';}};}
-
-function renderCalDetail(dateStr){
+// ── カレンダー ────────────────────────────────────────────
+function renderCalendar(){const now=new Date();if(calYear===undefined){calYear=now.getFullYear();calMonth=now.getMonth();}if(!calSelectedDate)calSelectedDate=todayStr();renderCalGrid();renderCalDetail(calSelectedDate);}
+function renderCalGrid(){const now=new Date(),td=todayStr(),firstDay=new Date(calYear,calMonth,1),lastDay=new Date(calYear,calMonth+1,0),startDow=firstDay.getDay(),daysInMonth=lastDay.getDate();document.getElementById('calMonthLabel').textContent=`${calYear}年${calMonth+1}月`;const DAYS=['日','月','火','水','木','金','土'];let html=DAYS.map((d,i)=>`<div class="cal-day-label" style="${i===0?'color:#E24B4A':i===6?'color:#378ADD':''}">${d}</div>`).join('');for(let i=0;i<startDow;i++)html+=`<div class="cal-day empty"></div>`;for(let d=1;d<=daysInMonth;d++){const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isToday=ds===td,isSelected=ds===calSelectedDate,dow=(startDow+d-1)%7;const hasMeals=(allMealsLog[ds]||[]).length>0,hasBody=!!bodyRecords.find(r=>r.date===ds),hasEx=(allExerciseLog[ds]||[]).length>0;let dots='';if(hasMeals||hasBody||hasEx){dots='<div class="cal-dot-row">';if(hasMeals)dots+=`<div class="cal-dot" style="background:var(--accent)"></div>`;if(hasBody)dots+=`<div class="cal-dot" style="background:var(--accent2)"></div>`;if(hasEx)dots+=`<div class="cal-dot" style="background:var(--amber)"></div>`;dots+='</div>';}html+=`<div class="cal-day${isToday?' today':''}${isSelected?' selected':''}" onclick="calSelectDate('${ds}')"><div class="cal-day-num" style="${dow===0?'color:var(--red)':dow===6?'color:var(--blue)':''}">${d}</div>${dots}</div>`;}document.getElementById('calGrid').innerHTML=html;}
+function calSelectDate(ds){calSelectedDate=ds;renderCalGrid();openDayDetailSheet(ds);}
+function calPrevMonth(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalGrid();calSelectedDate=null;document.getElementById('calDetail').innerHTML='';}
+function calNextMonth(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalGrid();calSelectedDate=null;document.getElementById('calDetail').innerHTML='';}
+function renderCalDetail(ds){
   const detailEl=document.getElementById('calDetail');
-  const dayMeals=allMealsLog[dateStr]||[];
-  const bodyRec=bodyRecords.find(r=>r.date===dateStr);
-  const[y,m,d]=dateStr.split('-');
-  const dateLabel=`${parseInt(m)}月${parseInt(d)}日`;
-  const isToday=dateStr===todayStr();
-
-  if(dayMeals.length===0&&!bodyRec){
-    detailEl.innerHTML=`<div class="cal-detail"><div class="cal-detail-date">${dateLabel}${isToday?' (今日)':''}</div><div class="cal-empty-day">📭 この日の記録はありません</div></div>`;
-    return;
-  }
-
+  const dayMeals=allMealsLog[ds]||[],bodyRec=bodyRecords.find(r=>r.date===ds),dayEx=allExerciseLog[ds]||[];
+  const[y,m,d]=ds.split('-');const dateLabel=`${parseInt(m)}月${parseInt(d)}日`;const isToday=ds===todayStr();
+  if(dayMeals.length===0&&!bodyRec&&dayEx.length===0){detailEl.innerHTML=`<div class="cal-detail"><div class="cal-detail-date">${dateLabel}${isToday?' (今日)':''}</div><div class="cal-empty-day">📭 この日の記録はありません</div></div>`;return;}
   const tot=dayMeals.reduce((a,m)=>({cal:a.cal+m.cal,p:a.p+m.p,f:a.f+m.f,c:a.c+m.c}),{cal:0,p:0,f:0,c:0});
-
+  const exActive=dayEx.reduce((s,e)=>s+e.cal,0),exSteps=dayEx.reduce((s,e)=>s+e.steps,0);
+  const totalBurn=burnSettings.basal+exActive,netCal=Math.round(tot.cal-totalBurn);
   let html=`<div class="cal-detail"><div class="cal-detail-date">${dateLabel}${isToday?' (今日)':''}</div>`;
-
-  if(dayMeals.length>0){
-    html+=`<div class="cal-detail-section"><div class="cal-detail-section-title">🍽 食事サマリー</div>
-    <div class="cal-macro-row">
-      <div class="cal-macro-item"><div class="cal-macro-val" style="color:var(--accent)">${Math.round(tot.cal)}</div><div class="cal-macro-label">kcal</div></div>
-      <div class="cal-macro-item"><div class="cal-macro-val" style="color:var(--accent2)">${Math.round(tot.p)}g</div><div class="cal-macro-label">タンパク質</div></div>
-      <div class="cal-macro-item"><div class="cal-macro-val" style="color:var(--amber)">${Math.round(tot.f)}g</div><div class="cal-macro-label">脂質</div></div>
-      <div class="cal-macro-item"><div class="cal-macro-val" style="color:var(--blue)">${Math.round(tot.c)}g</div><div class="cal-macro-label">炭水化物</div></div>
-    </div></div>`;
-
-    html+=`<div class="cal-detail-section"><div class="cal-detail-section-title">📋 食事一覧</div>`;
-    html+=dayMeals.map(m=>`<div class="cal-meal-item"><div><div class="cal-meal-name">${m.name}</div><div style="font-size:11px;color:var(--text3)">${m.time}　P ${m.p}g · F ${m.f}g · C ${m.c}g</div></div><div class="cal-meal-kcal">${m.cal}kcal</div></div>`).join('');
-    html+=`</div>`;
-  }
-
-  if(bodyRec){
-    html+=`<div class="cal-detail-section"><div class="cal-detail-section-title">⚖️ 体重・体脂肪</div>
-    <div class="cal-body-row">`;
-    if(bodyRec.weight!==null)html+=`<div class="cal-body-item"><div class="cal-body-val" style="color:var(--accent)">${bodyRec.weight.toFixed(1)}</div><div class="cal-body-label">体重 kg</div></div>`;
-    if(bodyRec.fat!==null)html+=`<div class="cal-body-item"><div class="cal-body-val" style="color:var(--accent2)">${bodyRec.fat.toFixed(1)}</div><div class="cal-body-label">体脂肪率 %</div></div>`;
-    html+=`</div></div>`;
-  }
-
-  html+=`</div>`;
-  detailEl.innerHTML=html;
-}
+  if(dayMeals.length>0){html+=`<div class="cal-detail-section"><div class="cal-detail-section-title">🍽 食事サマリー</div><div class="cal-macro-row"><div class="cal-macro-item"><div class="cal-macro-val" style="color:var(--accent)">${Math.round(tot.cal)}</div><div class="cal-macro-label">kcal</div></div><div class="cal-macro-item"><div class="cal-macro-val" style="color:var(--accent2)">${Math.round(tot.p)}g</div><div class="cal-macro-label">タンパク質</div></div><div class="cal-macro-item"><div class="cal-macro-val" style="color:var(--amber)">${Math.round(tot.f)}g</div><div class="cal-macro-label">脂質</div></div><div class="cal-macro-item"><div class="cal-macro-val" style="color:var(--blue)">${Math.round(tot.c)}g</div><div class="cal-macro-label">炭水化物</div></div></div></div>`;html+=`<div class="cal-detail-section"><div class="cal-detail-section-title">📋 食事一覧</div>${dayMeals.map(m=>`<div class="cal-meal-item"><div><div style="font-size:13px">${m.name}</div><div style="font-size:11px;color:var(--text3)">${m.time}</div></div><div style="font-size:13px;font-weight:600;color:var(--accent)">${m.cal}kcal</div></div>`).join('')}</div>`;}
+  if(dayEx.length>0){html+=`<div class="cal-detail-section"><div class="cal-detail-section-title">🔥 運動記録</div>${dayEx.map(e=>`<div class="cal-meal-item"><div><div style="font-size:13px">${e.name}</div><div style="font-size:11px;color:var(--text3)">${e.duration}分${e.steps>0?' · '+e.steps.toLocaleString()+'歩':''}</div></div><div style="font-size:13px;font-weight:600;color:var(--amber)">${e.cal}kcal</div></div>`).join('')}<div style="font-size:12px;color:var(--text2);margin-top:8px">アクティブ消費 ${exActive}kcal${exSteps>0?' · 歩数 '+exSteps.toLocaleString()+'歩':''}</div></div>`;}
+  if(dayMeals.length>0){html+=`<div class="cal-detail-section"><div class="cal-detail-section-title">⚖️ カロリー収支</div><div style="background:var(--bg3);border-radius:var(--radius-sm);padding:12px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:var(--text2)">摂取 − 消費</span><span style="font-size:20px;font-weight:700;color:${netCal<=0?'#1D9E75':'#E24B4A'}">${netCal>0?'+':''}${netCal} kcal</span></div></div>`;}
+  if(bodyRec){html+=`<div class="cal-detail-section"><div class="cal-detail-section-title">⚖️ 体重・体脂肪</div><div class="cal-body-row">${bodyRec.weight!==null?`<div class="cal-body-item"><div class="cal-body-val" style="color:var(--accent)">${bodyRec.weight.toFixed(1)}</div><div class="cal-body-label">体重 kg</div></div>`:''}${bodyRec.fat!==null?`<div class="cal-body-item"><div class="cal-body-val" style="color:var(--accent2)">${bodyRec.fat.toFixed(1)}</div><div class="cal-body-label">体脂肪率 %</div></div>`:''}</div></div>`;}
+  html+=`</div>`;detailEl.innerHTML=html;}
 
 // ── 目標計算 ──────────────────────────────────────────────
 function calcGoalTargets(g){const{sex,age,height,weight,fat,targetWeight,targetFat,weeks,activityLevel}=g;const currentFatKg=weight*(fat/100),lbm=weight-currentFatKg;let bmr;if(sex==='male')bmr=88.362+13.397*weight+4.799*height-5.677*age;else bmr=447.593+9.247*weight+3.098*height-4.330*age;const actMult={sedentary:1.2,light:1.375,moderate:1.55,active:1.725,veryActive:1.9};const tdee=Math.round(bmr*(actMult[activityLevel]||1.55));const tgtFatKg=(targetWeight||weight)*((targetFat||fat)/100);const fatToLose=Math.max(0,currentFatKg-tgtFatKg);const days=weeks*7;let dailyDeficit=days>0?Math.round(fatToLose*7700/days):0;dailyDeficit=Math.min(dailyDeficit,1000);let targetCal=Math.max(1200,tdee-dailyDeficit);const proteinG=Math.round(lbm*2.2),proteinCal=proteinG*4;const fatCal=Math.round(targetCal*0.25),fatG=Math.round(fatCal/9);const carbCal=Math.max(0,targetCal-proteinCal-fatCal),carbG=Math.round(carbCal/4);return{cal:Math.round(targetCal),p:proteinG,f:fatG,c:carbG,tdee,dailyDeficit:Math.round(dailyDeficit),fatToLose:Math.round(fatToLose*10)/10,lbm:Math.round(lbm*10)/10};}
@@ -651,12 +1088,11 @@ function renderGoalPage(){const el=document.getElementById('goalContent');if(!go
 
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 function clearToday(){if(!confirm('今日の食事記録を削除しますか？'))return;meals=[];saveMeals();renderMeals();updateSummary();showToast('削除しました');}
-function clearAll(){if(!confirm('すべてのデータを削除しますか？この操作は元に戻せません。'))return;meals=[];foodHistory=[];bodyRecords=[];allMealsLog={};goalData=null;goalResult=null;localStorage.clear();renderMeals();updateSummary();updateBodyStats();renderGoalPage();showToast('削除しました');}
+function clearAll(){if(!confirm('すべてのデータを削除しますか？この操作は元に戻せません。'))return;meals=[];exercises=[];foodHistory=[];bodyRecords=[];allMealsLog={};allExerciseLog={};goalData=null;goalResult=null;localStorage.clear();renderMeals();updateSummary();updateBodyStats();renderGoalPage();showToast('削除しました');}
 
 // ── 初期化 ────────────────────────────────────────────────
-const now=new Date();
-document.getElementById('dateBadge').textContent=`${now.getMonth()+1}/${now.getDate()}`;
-load();renderMeals();updateSummary();updateBodyStats();
+document.getElementById('dateBadge').textContent=`${new Date().getMonth()+1}/${new Date().getDate()}`;
+load();renderMeals();updateSummary();updateBodyStats();renderExerciseList();loadViewingDateFood();
 </script>
 </body>
 </html>
