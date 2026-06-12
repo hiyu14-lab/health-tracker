@@ -198,6 +198,14 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 .water-quick-btn{flex:1;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:10px 4px;text-align:center;cursor:pointer;color:var(--blue);font-size:13px;font-weight:600}
 .water-quick-btn:active{background:var(--bg4)}
 .water-reset-btn{background:transparent;border:none;color:var(--text3);cursor:pointer;padding:4px;flex-shrink:0}
+.date-badge{cursor:pointer}
+.date-badge:active{opacity:0.7}
+.viewdate-banner{background:rgba(127,119,221,0.12);border:0.5px solid var(--accent);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.viewdate-banner-label{font-size:13px;color:var(--accent);font-weight:600}
+.viewdate-today-btn{background:var(--accent);color:#fff;border:none;border-radius:20px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600}
+.date-nav-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.date-nav-btn{background:var(--bg2);border:0.5px solid var(--border2);border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:18px;flex-shrink:0}
+.date-nav-label{flex:1;text-align:center;font-size:15px;font-weight:600;cursor:pointer}
 </style>
 </head>
 <body>
@@ -207,6 +215,15 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 </div>
 <div class="content">
   <div class="page active" id="page-food">
+    <div class="date-nav-row">
+      <button class="date-nav-btn" onclick="shiftViewDate(-1)">&#8249;</button>
+      <div class="date-nav-label" id="viewDateLabel" onclick="openDatePicker()">今日</div>
+      <button class="date-nav-btn" onclick="shiftViewDate(1)">&#8250;</button>
+    </div>
+    <div class="viewdate-banner" id="viewDateBanner" style="display:none">
+      <span class="viewdate-banner-label" id="viewDateBannerLabel"></span>
+      <button class="viewdate-today-btn" onclick="goToToday()">今日に戻る</button>
+    </div>
     <div class="cal-ring-wrap">
       <div class="ring-labels">
         <div class="ring-cal"><span id="sumCal">0</span><span style="font-size:16px;font-weight:400;color:var(--text2)"> kcal</span></div>
@@ -227,10 +244,10 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
         <div style="font-size:13px;color:var(--accent);margin-top:6px">食事を追加</div>
       </div>
     </div>
-    <div class="sec-header"><div class="sec-title">今日の食事</div></div>
+    <div class="sec-header"><div class="sec-title" id="mealListTitle">今日の食事</div></div>
     <div id="mealList"></div>
 
-    <div class="sec-header"><div class="sec-title">水分摂取</div></div>
+    <div class="sec-header"><div class="sec-title" id="waterSectionTitle">水分摂取</div></div>
     <div class="water-card">
       <div class="water-cup-wrap">
         <svg class="water-cup-bg" viewBox="0 0 54 64" width="54" height="64">
@@ -475,6 +492,16 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
   </div>
 </div>
 
+<div class="sheet-overlay" id="datePickerSheet" onclick="closeSheet('datePicker')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">日付を選択</div>
+    <div class="field"><label>日付</label><input type="date" id="dpInput"></div>
+    <button class="btn-primary" onclick="applyDatePicker()">この日に移動</button>
+    <button class="btn-secondary" onclick="closeSheet('datePicker')">キャンセル</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
@@ -573,6 +600,7 @@ var currentMode='db',currentExMode='preset',currentCat='すべて';
 var selectedExPreset=null;
 var calYear,calMonth,calSelectedDate;
 var waterToday=0,waterTarget=2000,allWaterLog={};
+var viewDate=null;
 
 function todayStr(){return new Date().toISOString().split('T')[0];}
 
@@ -607,6 +635,7 @@ function load(){
   try{goalData=JSON.parse(localStorage.getItem('goal_data')||'null');}catch(e){}
   if(goalData){goalResult=calcGoalTargets(goalData);}
   applyTargets();
+  viewDate=td;
 }
 function saveMeals(){localStorage.setItem('meals_today',JSON.stringify(meals));var td=todayStr();allMealsLog[td]=meals;saveAllLogs();}
 function saveExercises(){localStorage.setItem('exercises_today',JSON.stringify(exercises));var td=todayStr();allExerciseLog[td]=exercises;saveAllLogs();}
@@ -646,30 +675,31 @@ function saveWaterTarget(){
   updateWaterDisplay();showToast('保存しました');
 }
 function addWater(ml){
-  waterToday+=ml;
-  if(waterToday<0)waterToday=0;
-  saveWaterToday();
+  var cur=getViewWater();
+  cur+=ml;
+  setViewWater(cur);
   updateWaterDisplay();
 }
 function resetWater(){
   if(!confirm('水分摂取量をリセットしますか？'))return;
-  waterToday=0;saveWaterToday();updateWaterDisplay();showToast('リセットしました');
+  setViewWater(0);updateWaterDisplay();showToast('リセットしました');
 }
 function updateWaterDisplay(){
   var amtEl=document.getElementById('waterAmount');
   if(!amtEl)return;
-  amtEl.textContent=waterToday;
+  var w=getViewWater();
+  amtEl.textContent=w;
   document.getElementById('waterTargetDisp').textContent=waterTarget;
-  var pct=waterTarget>0?Math.min(1,waterToday/waterTarget):0;
+  var pct=waterTarget>0?Math.min(1,w/waterTarget):0;
   document.getElementById('waterBar').style.width=(pct*100)+'%';
   var fillH=56*pct;
   var rect=document.getElementById('waterFillRect');
   rect.setAttribute('height',fillH.toFixed(1));
   rect.setAttribute('y',(60-fillH).toFixed(1));
   var statusEl=document.getElementById('waterStatusText');
-  if(waterToday<=0)statusEl.textContent='こまめに水分補給しよう';
+  if(w<=0)statusEl.textContent='こまめに水分補給しよう';
   else if(pct>=1)statusEl.textContent='目標達成！よくできました';
-  else statusEl.textContent='目標まで あと '+(waterTarget-waterToday)+'ml';
+  else statusEl.textContent='目標まで あと '+(waterTarget-w)+'ml';
   var stgEl=document.getElementById('stgWater');
   if(stgEl&&!stgEl.value)stgEl.placeholder=String(waterTarget);
 }
@@ -803,35 +833,119 @@ function openSheet(type){
   }else if(type==='goal'){
     wizardStep=1;wizardState={};renderWizard();
     document.getElementById('goalSheet').classList.add('open');
+  }else if(type==='datePicker'){
+    document.getElementById('dpInput').value=viewDate||todayStr();
+    document.getElementById('datePickerSheet').classList.add('open');
   }
 }
 function closeSheet(type){
-  var map={meal:'mealSheet',exercise:'exerciseSheet',burnSettings:'burnSettingsSheet',body:'bodySheet',goal:'goalSheet'};
+  var map={meal:'mealSheet',exercise:'exerciseSheet',burnSettings:'burnSettingsSheet',body:'bodySheet',goal:'goalSheet',datePicker:'datePickerSheet'};
   document.getElementById(map[type]||type+'Sheet').classList.remove('open');
 }
 
+function openDatePicker(){
+  openSheet('datePicker');
+}
+function applyDatePicker(){
+  var v=document.getElementById('dpInput').value;
+  if(!v){showToast('日付を選択してください');return;}
+  closeSheet('datePicker');
+  setViewDate(v);
+}
+function goToToday(){setViewDate(todayStr());}
+function shiftViewDate(delta){
+  var d=new Date(viewDate+'T00:00:00');
+  d.setDate(d.getDate()+delta);
+  var y=d.getFullYear();
+  var m=String(d.getMonth()+1).padStart(2,'0');
+  var dd=String(d.getDate()).padStart(2,'0');
+  setViewDate(y+'-'+m+'-'+dd);
+}
+function setViewDate(ds){
+  viewDate=ds;
+  renderViewDateUI();
+  renderMeals();
+  updateSummary();
+  updateWaterDisplay();
+}
+function renderViewDateUI(){
+  var td=todayStr();
+  var label=document.getElementById('viewDateLabel');
+  var banner=document.getElementById('viewDateBanner');
+  var bannerLabel=document.getElementById('viewDateBannerLabel');
+  var mealTitle=document.getElementById('mealListTitle');
+  var waterTitle=document.getElementById('waterSectionTitle');
+  var parts=viewDate.split('-');
+  var dispDate=parseInt(parts[1])+'月'+parseInt(parts[2])+'日';
+  if(viewDate===td){
+    label.textContent='今日';
+    banner.style.display='none';
+    mealTitle.textContent='今日の食事';
+    waterTitle.textContent='水分摂取';
+  }else{
+    label.textContent=dispDate;
+    banner.style.display='flex';
+    bannerLabel.textContent=dispDate+' の記録を表示中';
+    mealTitle.textContent=dispDate+'の食事';
+    waterTitle.textContent=dispDate+'の水分摂取';
+  }
+}
+function goToFoodDate(ds){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-item').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('page-food').classList.add('active');
+  document.querySelectorAll('.tab-item')[0].classList.add('active');
+  document.getElementById('pageTitle').textContent=pageTitles.food;
+  setViewDate(ds);
+}
+
+function getViewMeals(){
+  if(viewDate===todayStr())return meals;
+  return allMealsLog[viewDate]||[];
+}
+function setViewMeals(arr){
+  if(viewDate===todayStr()){meals=arr;saveMeals();}
+  else{allMealsLog[viewDate]=arr;saveAllLogs();}
+}
+function getViewWater(){
+  if(viewDate===todayStr())return waterToday;
+  return allWaterLog[viewDate]||0;
+}
+function setViewWater(val){
+  if(val<0)val=0;
+  if(viewDate===todayStr()){waterToday=val;saveWaterToday();}
+  else{allWaterLog[viewDate]=val;localStorage.setItem('all_water_log',JSON.stringify(allWaterLog));}
+}
 function addMeal(){
   var name=document.getElementById('inName').value.trim();
   if(!name){showToast('食品名を入力してください');return;}
   var meal={id:Date.now(),name:name,time:document.getElementById('inTime').value,cal:parseFloat(document.getElementById('inCal').value)||0,p:parseFloat(document.getElementById('inP').value)||0,f:parseFloat(document.getElementById('inF').value)||0,c:parseFloat(document.getElementById('inC').value)||0};
-  meals.push(meal);
+  var arr=getViewMeals();
+  arr=arr.concat([meal]);
+  setViewMeals(arr);
   if(!foodHistory.find(function(h){return h.name===name;})){
     foodHistory.unshift({name:name,cal:meal.cal,p:meal.p,f:meal.f,c:meal.c});
     if(foodHistory.length>50)foodHistory.pop();
     saveHistory();
   }
-  saveMeals();closeSheet('meal');renderMeals();updateSummary();showToast('追加しました');
+  closeSheet('meal');renderMeals();updateSummary();showToast('追加しました');
 }
-function deleteMeal(id){meals=meals.filter(function(m){return m.id!==id;});saveMeals();renderMeals();updateSummary();}
+function deleteMeal(id){
+  var arr=getViewMeals().filter(function(m){return m.id!==id;});
+  setViewMeals(arr);
+  renderMeals();updateSummary();
+}
 function renderMeals(){
   var list=document.getElementById('mealList');
-  if(meals.length===0){list.innerHTML='<div class="empty-state"><div style="font-size:36px;margin-bottom:8px">食事</div>今日の食事を記録しよう</div>';return;}
-  list.innerHTML=meals.map(function(m){
+  var arr=getViewMeals();
+  if(arr.length===0){list.innerHTML='<div class="empty-state"><div style="font-size:36px;margin-bottom:8px">食事</div>'+(viewDate===todayStr()?'今日の食事を記録しよう':'この日の記録はありません')+'</div>';return;}
+  list.innerHTML=arr.map(function(m){
     return '<div class="meal-card"><div class="meal-dot '+(dotClass[m.time]||'dot-snack')+'"></div><div class="meal-info"><div class="meal-name">'+m.name+'</div><div class="meal-meta">'+m.time+' P '+m.p+'g F '+m.f+'g C '+m.c+'g</div></div><div class="meal-kcal">'+m.cal+'<span style="font-size:11px;color:var(--text2)">kcal</span></div><button class="del-btn-small" onclick="deleteMeal('+m.id+')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg></button></div>';
   }).join('');
 }
 function updateSummary(){
-  var tot=meals.reduce(function(a,m){return {cal:a.cal+m.cal,p:a.p+m.p,f:a.f+m.f,c:a.c+m.c};},{cal:0,p:0,f:0,c:0});
+  var arr=getViewMeals();
+  var tot=arr.reduce(function(a,m){return {cal:a.cal+m.cal,p:a.p+m.p,f:a.f+m.f,c:a.c+m.c};},{cal:0,p:0,f:0,c:0});
   document.getElementById('sumCal').textContent=Math.round(tot.cal);
   document.getElementById('sumP').textContent=Math.round(tot.p);
   document.getElementById('sumF').textContent=Math.round(tot.f);
@@ -1014,7 +1128,7 @@ function renderCalDetail(ds){
   var dateLabel=parseInt(parts[1])+'月'+parseInt(parts[2])+'日';
   var isToday=ds===todayStr();
   if(dayMeals.length===0&&!bodyRec&&dayEx.length===0&&dayWater===0){
-    el.innerHTML='<div class="cal-detail"><div class="cal-detail-date">'+dateLabel+(isToday?' (今日)':'')+'</div><div class="cal-empty">記録なし</div></div>';
+    el.innerHTML='<div class="cal-detail"><div class="cal-detail-date">'+dateLabel+(isToday?' (今日)':'')+'</div><div class="cal-empty">記録なし</div><button class="btn-secondary" style="margin-top:10px" onclick="goToFoodDate(\''+ds+'\')">この日の食事を記録・編集</button></div>';
     return;
   }
   var tot=dayMeals.reduce(function(a,m){return {cal:a.cal+m.cal,p:a.p+m.p,f:a.f+m.f,c:a.c+m.c};},{cal:0,p:0,f:0,c:0});
@@ -1049,6 +1163,7 @@ function renderCalDetail(ds){
   if(dayWater>0){
     html+='<div class="cal-detail-stitle" style="margin-top:12px">水分摂取</div><div style="background:var(--bg3);border-radius:8px;padding:10px;text-align:center"><span style="font-size:20px;font-weight:700;color:var(--blue)">'+dayWater+'</span><span style="font-size:12px;color:var(--text2)"> ml</span></div>';
   }
+  html+='<button class="btn-secondary" style="margin-top:12px" onclick="goToFoodDate(\''+ds+'\')">この日の食事を記録・編集</button>';
   html+='</div>';
   el.innerHTML=html;
 }
@@ -1169,7 +1284,7 @@ function clearAll(){if(!confirm('すべてのデータを削除しますか？')
 
 var now=new Date();
 document.getElementById('dateBadge').textContent=(now.getMonth()+1)+'/'+now.getDate();
-load();renderMeals();updateSummary();updateBodyStats();renderExerciseList();updateWaterDisplay();
+load();renderMeals();updateSummary();updateBodyStats();renderExerciseList();updateWaterDisplay();renderViewDateUI();
 </script>
 </body>
 </html>
