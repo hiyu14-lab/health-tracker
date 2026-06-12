@@ -17,9 +17,9 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 .topbar-title{font-size:28px;font-weight:700;letter-spacing:-0.5px}
 .date-badge{font-size:13px;color:var(--text2);background:var(--bg3);padding:5px 10px;border-radius:20px}
 .tab-bar{display:flex;background:var(--bg2);border-top:0.5px solid var(--border);padding-bottom:calc(8px + var(--safe-bottom));flex-shrink:0}
-.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 6px;cursor:pointer;color:var(--text3);font-size:10px;border:none;background:transparent}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px 6px;cursor:pointer;color:var(--text3);font-size:9.5px;border:none;background:transparent}
 .tab-item.active{color:var(--accent)}
-.tab-item svg{width:22px;height:22px;stroke-width:1.8}
+.tab-item svg{width:20px;height:20px;stroke-width:1.8}
 .content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 24px}
 .page{display:none}.page.active{display:block}
 .macro-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
@@ -184,6 +184,20 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 .ex-preset-name{font-size:11px;color:var(--text2)}
 .ex-preset-kcal{font-size:10px;color:var(--text3);margin-top:2px}
 .weekly-chart-card{background:var(--bg2);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.water-card{background:var(--bg2);border-radius:var(--radius);padding:18px;margin-bottom:16px;display:flex;align-items:center;gap:18px}
+.water-cup-wrap{position:relative;width:54px;height:64px;flex-shrink:0}
+.water-cup-bg,.water-cup-fg{position:absolute;inset:0}
+.water-cup-fill{transition:y .4s, height .4s}
+.water-info{flex:1}
+.water-amount{font-size:24px;font-weight:700}
+.water-amount span{font-size:14px;font-weight:400;color:var(--text2)}
+.water-target{font-size:12px;color:var(--text2);margin-top:2px}
+.water-bar{height:6px;background:var(--bg4);border-radius:3px;margin-top:10px;overflow:hidden}
+.water-bar-fill{height:100%;border-radius:3px;background:var(--blue);transition:width .4s}
+.water-quick-row{display:flex;gap:8px;margin-top:12px}
+.water-quick-btn{flex:1;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:10px 4px;text-align:center;cursor:pointer;color:var(--blue);font-size:13px;font-weight:600}
+.water-quick-btn:active{background:var(--bg4)}
+.water-reset-btn{background:transparent;border:none;color:var(--text3);cursor:pointer;padding:4px;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -215,6 +229,33 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
     </div>
     <div class="sec-header"><div class="sec-title">今日の食事</div></div>
     <div id="mealList"></div>
+
+    <div class="sec-header"><div class="sec-title">水分摂取</div></div>
+    <div class="water-card">
+      <div class="water-cup-wrap">
+        <svg class="water-cup-bg" viewBox="0 0 54 64" width="54" height="64">
+          <path d="M6 4 H48 L42 60 H12 Z" fill="var(--bg4)" stroke="var(--border2)" stroke-width="1.5"/>
+        </svg>
+        <svg class="water-cup-fg" viewBox="0 0 54 64" width="54" height="64">
+          <defs>
+            <clipPath id="cupClip"><path d="M6 4 H48 L42 60 H12 Z"/></clipPath>
+          </defs>
+          <rect class="water-cup-fill" id="waterFillRect" x="6" y="64" width="42" height="0" fill="var(--blue)" opacity="0.85" clip-path="url(#cupClip)"/>
+          <path d="M6 4 H48 L42 60 H12 Z" fill="none" stroke="var(--border2)" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="water-info">
+        <div class="water-amount"><span id="waterAmount">0</span><span> / <span id="waterTargetDisp">2000</span> ml</span></div>
+        <div class="water-target" id="waterStatusText">こまめに水分補給しよう</div>
+        <div class="water-bar"><div class="water-bar-fill" id="waterBar" style="width:0%"></div></div>
+        <div class="water-quick-row">
+          <div class="water-quick-btn" onclick="addWater(200)">+200ml</div>
+          <div class="water-quick-btn" onclick="addWater(350)">+350ml</div>
+          <div class="water-quick-btn" onclick="addWater(500)">+500ml</div>
+        </div>
+      </div>
+      <button class="water-reset-btn" onclick="resetWater()" title="リセット"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></button>
+    </div>
   </div>
 
   <div class="page" id="page-burn">
@@ -313,6 +354,7 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
       <div class="settings-row"><div><div class="settings-row-label">タンパク質</div></div><input type="number" id="stgP" min="0" placeholder="自動" onchange="saveManualTargets()"> <span style="font-size:13px;color:var(--text2)">g</span></div>
       <div class="settings-row"><div><div class="settings-row-label">脂質</div></div><input type="number" id="stgF" min="0" placeholder="自動" onchange="saveManualTargets()"> <span style="font-size:13px;color:var(--text2)">g</span></div>
       <div class="settings-row"><div><div class="settings-row-label">炭水化物</div></div><input type="number" id="stgC" min="0" placeholder="自動" onchange="saveManualTargets()"> <span style="font-size:13px;color:var(--text2)">g</span></div>
+      <div class="settings-row"><div><div class="settings-row-label">水分</div></div><input type="number" id="stgWater" min="0" step="100" placeholder="2000" onchange="saveWaterTarget()"> <span style="font-size:13px;color:var(--text2)">ml</span></div>
     </div>
     <div class="settings-section-title">データ</div>
     <div class="settings-section">
@@ -330,6 +372,7 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
   <button class="tab-item" onclick="switchPage('body',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4a4 4 0 1 1-8 0 4 4 0 0 1 8 0"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>体重</button>
   <button class="tab-item" onclick="switchPage('calendar',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>記録</button>
   <button class="tab-item" onclick="switchPage('goal',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>目標</button>
+  <button class="tab-item" onclick="switchPage('settings',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>設定</button>
 </nav>
 
 <!-- 食事追加シート -->
@@ -529,12 +572,15 @@ var wizardStep=1,wizardState={};
 var currentMode='db',currentExMode='preset',currentCat='すべて';
 var selectedExPreset=null;
 var calYear,calMonth,calSelectedDate;
+var waterToday=0,waterTarget=2000,allWaterLog={};
 
 function todayStr(){return new Date().toISOString().split('T')[0];}
 
 function load(){
   try{allMealsLog=JSON.parse(localStorage.getItem('all_meals_log')||'{}');}catch(e){allMealsLog={};}
   try{allExerciseLog=JSON.parse(localStorage.getItem('all_exercise_log')||'{}');}catch(e){allExerciseLog={};}
+  try{allWaterLog=JSON.parse(localStorage.getItem('all_water_log')||'{}');}catch(e){allWaterLog={};}
+  try{var wt=localStorage.getItem('water_target');if(wt)waterTarget=parseInt(wt);}catch(e){}
   try{burnSettings=JSON.parse(localStorage.getItem('burn_settings')||JSON.stringify(burnSettings));}catch(e){}
   var td=todayStr();
   var lastDate=localStorage.getItem('last_date');
@@ -542,15 +588,18 @@ function load(){
   if(lastDate!==todayDateStr){
     try{var om=JSON.parse(localStorage.getItem('meals_today')||'[]');if(om.length>0&&lastDate){var d=new Date(lastDate);if(!isNaN(d)){var s=d.toISOString().split('T')[0];if(!allMealsLog[s]||allMealsLog[s].length===0)allMealsLog[s]=om;}}}catch(e){}
     try{var oe=JSON.parse(localStorage.getItem('exercises_today')||'[]');if(oe.length>0&&lastDate){var d2=new Date(lastDate);if(!isNaN(d2)){var s2=d2.toISOString().split('T')[0];if(!allExerciseLog[s2])allExerciseLog[s2]=oe;}}}catch(e){}
-    meals=[];exercises=[];
-    localStorage.setItem('meals_today','[]');localStorage.setItem('exercises_today','[]');
+    try{var ow=parseInt(localStorage.getItem('water_today')||'0');if(ow>0&&lastDate){var d3=new Date(lastDate);if(!isNaN(d3)){var s3=d3.toISOString().split('T')[0];if(!allWaterLog[s3])allWaterLog[s3]=ow;}}}catch(e){}
+    meals=[];exercises=[];waterToday=0;
+    localStorage.setItem('meals_today','[]');localStorage.setItem('exercises_today','[]');localStorage.setItem('water_today','0');
     localStorage.setItem('last_date',todayDateStr);
     saveAllLogs();
   }else{
     try{meals=JSON.parse(localStorage.getItem('meals_today')||'[]');}catch(e){meals=[];}
     try{exercises=JSON.parse(localStorage.getItem('exercises_today')||'[]');}catch(e){exercises=[];}
+    try{waterToday=parseInt(localStorage.getItem('water_today')||'0');}catch(e){waterToday=0;}
     if(meals.length>0)allMealsLog[td]=meals;
     if(exercises.length>0)allExerciseLog[td]=exercises;
+    if(waterToday>0)allWaterLog[td]=waterToday;
   }
   try{foodHistory=JSON.parse(localStorage.getItem('food_history')||'[]');}catch(e){foodHistory=[];}
   try{bodyRecords=JSON.parse(localStorage.getItem('body_records')||'[]');}catch(e){bodyRecords=[];}
@@ -587,6 +636,42 @@ function applyTargets(){
   targets.c=manualTargets.c!=null?manualTargets.c:base.c;
   ['P','F','C'].forEach(function(k){var el=document.getElementById('dispTgt'+k);if(el)el.textContent=targets[k.toLowerCase()];});
   updateSummary();
+}
+
+function saveWaterToday(){localStorage.setItem('water_today',String(waterToday));var td=todayStr();allWaterLog[td]=waterToday;localStorage.setItem('all_water_log',JSON.stringify(allWaterLog));}
+function saveWaterTarget(){
+  var v=parseInt(document.getElementById('stgWater').value);
+  waterTarget=(v&&v>0)?v:2000;
+  localStorage.setItem('water_target',String(waterTarget));
+  updateWaterDisplay();showToast('保存しました');
+}
+function addWater(ml){
+  waterToday+=ml;
+  if(waterToday<0)waterToday=0;
+  saveWaterToday();
+  updateWaterDisplay();
+}
+function resetWater(){
+  if(!confirm('水分摂取量をリセットしますか？'))return;
+  waterToday=0;saveWaterToday();updateWaterDisplay();showToast('リセットしました');
+}
+function updateWaterDisplay(){
+  var amtEl=document.getElementById('waterAmount');
+  if(!amtEl)return;
+  amtEl.textContent=waterToday;
+  document.getElementById('waterTargetDisp').textContent=waterTarget;
+  var pct=waterTarget>0?Math.min(1,waterToday/waterTarget):0;
+  document.getElementById('waterBar').style.width=(pct*100)+'%';
+  var fillH=56*pct;
+  var rect=document.getElementById('waterFillRect');
+  rect.setAttribute('height',fillH.toFixed(1));
+  rect.setAttribute('y',(60-fillH).toFixed(1));
+  var statusEl=document.getElementById('waterStatusText');
+  if(waterToday<=0)statusEl.textContent='こまめに水分補給しよう';
+  else if(pct>=1)statusEl.textContent='目標達成！よくできました';
+  else statusEl.textContent='目標まで あと '+(waterTarget-waterToday)+'ml';
+  var stgEl=document.getElementById('stgWater');
+  if(stgEl&&!stgEl.value)stgEl.placeholder=String(waterTarget);
 }
 
 function initCatChips(){
@@ -682,6 +767,13 @@ function switchPage(name,btn){
   if(name==='goal')renderGoalPage();
   if(name==='calendar')renderCalendar();
   if(name==='burn'){setTimeout(function(){updateBurnPage();renderWeeklyBurnChart();},50);}
+  if(name==='settings'){
+    document.getElementById('stgCal').value=manualTargets.cal!=null?manualTargets.cal:'';
+    document.getElementById('stgP').value=manualTargets.p!=null?manualTargets.p:'';
+    document.getElementById('stgF').value=manualTargets.f!=null?manualTargets.f:'';
+    document.getElementById('stgC').value=manualTargets.c!=null?manualTargets.c:'';
+    document.getElementById('stgWater').value=waterTarget;
+  }
 }
 function openSheet(type){
   if(type==='meal'){
@@ -917,10 +1009,11 @@ function renderCalDetail(ds){
   var dayMeals=allMealsLog[ds]||[];
   var bodyRec=bodyRecords.find(function(r){return r.date===ds;});
   var dayEx=allExerciseLog[ds]||[];
+  var dayWater=allWaterLog[ds]||0;
   var parts=ds.split('-');
   var dateLabel=parseInt(parts[1])+'月'+parseInt(parts[2])+'日';
   var isToday=ds===todayStr();
-  if(dayMeals.length===0&&!bodyRec&&dayEx.length===0){
+  if(dayMeals.length===0&&!bodyRec&&dayEx.length===0&&dayWater===0){
     el.innerHTML='<div class="cal-detail"><div class="cal-detail-date">'+dateLabel+(isToday?' (今日)':'')+'</div><div class="cal-empty">記録なし</div></div>';
     return;
   }
@@ -952,6 +1045,9 @@ function renderCalDetail(ds){
     if(bodyRec.weight!==null)html+='<div class="cal-body-item"><div class="cal-body-val" style="color:var(--accent)">'+bodyRec.weight.toFixed(1)+'</div><div class="cal-body-label">体重 kg</div></div>';
     if(bodyRec.fat!==null)html+='<div class="cal-body-item"><div class="cal-body-val" style="color:var(--accent2)">'+bodyRec.fat.toFixed(1)+'</div><div class="cal-body-label">体脂肪率 %</div></div>';
     html+='</div>';
+  }
+  if(dayWater>0){
+    html+='<div class="cal-detail-stitle" style="margin-top:12px">水分摂取</div><div style="background:var(--bg3);border-radius:8px;padding:10px;text-align:center"><span style="font-size:20px;font-weight:700;color:var(--blue)">'+dayWater+'</span><span style="font-size:12px;color:var(--text2)"> ml</span></div>';
   }
   html+='</div>';
   el.innerHTML=html;
@@ -1069,11 +1165,11 @@ function renderGoalPage(){
 
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
 function clearToday(){if(!confirm('今日の食事記録を削除しますか？'))return;meals=[];saveMeals();renderMeals();updateSummary();showToast('削除しました');}
-function clearAll(){if(!confirm('すべてのデータを削除しますか？'))return;meals=[];exercises=[];foodHistory=[];bodyRecords=[];allMealsLog={};allExerciseLog={};goalData=null;goalResult=null;localStorage.clear();renderMeals();updateSummary();updateBodyStats();renderGoalPage();showToast('削除しました');}
+function clearAll(){if(!confirm('すべてのデータを削除しますか？'))return;meals=[];exercises=[];foodHistory=[];bodyRecords=[];allMealsLog={};allExerciseLog={};allWaterLog={};waterToday=0;waterTarget=2000;goalData=null;goalResult=null;localStorage.clear();renderMeals();updateSummary();updateBodyStats();renderGoalPage();updateWaterDisplay();showToast('削除しました');}
 
 var now=new Date();
 document.getElementById('dateBadge').textContent=(now.getMonth()+1)+'/'+now.getDate();
-load();renderMeals();updateSummary();updateBodyStats();renderExerciseList();
+load();renderMeals();updateSummary();updateBodyStats();renderExerciseList();updateWaterDisplay();
 </script>
 </body>
 </html>
