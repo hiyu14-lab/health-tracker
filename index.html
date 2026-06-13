@@ -123,6 +123,11 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 .db-sel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
 .db-sel-val{font-size:16px;font-weight:700}
 .db-sel-label{font-size:10px;color:var(--text2);margin-top:1px}
+.db-sel-gram-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;background:var(--bg3);border-radius:8px;padding:8px 10px}
+.db-sel-gram-row label{font-size:12px;color:var(--text2)}
+.db-sel-gram-input-wrap{display:flex;align-items:center;gap:6px}
+.db-sel-gram-input-wrap input{width:70px;background:var(--bg4);border:0.5px solid var(--border2);border-radius:6px;padding:6px 8px;font-size:15px;color:var(--text);text-align:right}
+.db-sel-gram-input-wrap span{font-size:13px;color:var(--text2)}
 .mode-tabs{display:flex;gap:6px;margin-bottom:14px}
 .mode-tab{flex:1;padding:9px;font-size:12px;border-radius:8px;border:0.5px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer}
 .mode-tab.active{background:rgba(127,119,221,0.15);border-color:var(--accent);color:var(--accent);font-weight:600}
@@ -408,8 +413,12 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
       <div id="dbResults"></div>
       <div id="dbSelected" style="display:none"></div>
     </div>
-    <div id="modeHist" style="display:none"><div style="font-size:12px;color:var(--text2);margin-bottom:8px">最近の食事</div><div class="hist-scroll" id="histScroll"></div></div>
-    <div id="modeManual" style="display:none"><div style="font-size:12px;color:var(--text2);margin-bottom:12px">数値を直接入力します</div></div>
+    <div id="modeHist" style="display:none"><div style="font-size:12px;color:var(--text2);margin-bottom:8px">最近の食事</div><div class="hist-scroll" id="histScroll"></div><div id="histSelected" style="display:none"></div></div>
+    <div id="modeManual" style="display:none">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:12px">数値を直接入力します</div>
+      <div class="field"><label>グラム数（任意）</label><input type="number" id="inManualGrams" placeholder="例: 150" min="0" step="1" inputmode="numeric"></div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px">入力すると次回以降、量を変えて自動計算できます</div>
+    </div>
     <div class="field"><label>食品名</label><input type="text" id="inName" placeholder="例: 鶏むね肉 100g"></div>
     <div class="field-row">
       <div class="field"><label>タイミング</label><select id="inTime"><option value="朝食">朝食</option><option value="昼食">昼食</option><option value="夕食">夕食</option><option value="間食">間食</option></select></div>
@@ -506,74 +515,133 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 var FOOD_DB=[
-  {name:'白米(茶碗1杯 150g)',cat:'主食',cal:252,p:3.8,f:0.5,c:55.7},
-  {name:'白米(大盛り 200g)',cat:'主食',cal:336,p:5.0,f:0.6,c:74.2},
-  {name:'玄米(茶碗1杯 150g)',cat:'主食',cal:248,p:4.2,f:1.5,c:53.4},
-  {name:'食パン(6枚切り1枚)',cat:'主食',cal:158,p:5.6,f:2.6,c:28.0},
-  {name:'うどん(1玉 200g)',cat:'主食',cal:210,p:5.2,f:0.8,c:43.2},
-  {name:'そば(1玉 200g)',cat:'主食',cal:264,p:9.6,f:1.0,c:51.6},
-  {name:'パスタ(乾燥 80g)',cat:'主食',cal:286,p:10.1,f:1.2,c:57.4},
-  {name:'オートミール(30g)',cat:'主食',cal:105,p:3.9,f:1.8,c:18.9},
-  {name:'親子丼(1杯)',cat:'和食',cal:580,p:28,f:14,c:78},
-  {name:'カツ丼(1杯)',cat:'和食',cal:780,p:30,f:22,c:102},
-  {name:'牛丼(並盛)',cat:'和食',cal:640,p:20,f:18,c:96},
-  {name:'鮭おにぎり(1個)',cat:'和食',cal:185,p:6,f:2,c:35},
-  {name:'ツナマヨおにぎり(1個)',cat:'和食',cal:215,p:6,f:7,c:32},
-  {name:'味噌汁(1杯)',cat:'和食',cal:35,p:2.5,f:1.5,c:3},
-  {name:'納豆(1パック 45g)',cat:'和食',cal:85,p:7.4,f:4.5,c:5},
-  {name:'ゆで卵(1個)',cat:'和食',cal:78,p:6.5,f:5,c:0.4},
-  {name:'焼き魚サバ(1切れ)',cat:'和食',cal:202,p:20,f:13,c:0},
-  {name:'唐揚げ(3個)',cat:'和食',cal:340,p:24,f:20,c:15},
-  {name:'餃子(6個)',cat:'和食',cal:300,p:14,f:12,c:32},
-  {name:'卵かけご飯(1杯)',cat:'和食',cal:330,p:10,f:6,c:57},
-  {name:'ハンバーグ(1個)',cat:'洋食',cal:350,p:18,f:22,c:18},
-  {name:'カレーライス(1皿)',cat:'洋食',cal:720,p:18,f:18,c:112},
-  {name:'チャーハン(1皿)',cat:'洋食',cal:580,p:16,f:18,c:86},
-  {name:'スパゲッティミートソース(1皿)',cat:'洋食',cal:620,p:22,f:18,c:88},
-  {name:'ハンバーガー(1個)',cat:'洋食',cal:460,p:18,f:20,c:52},
-  {name:'ビッグマック(1個)',cat:'洋食',cal:525,p:26,f:26,c:45},
-  {name:'フライドポテト(M)',cat:'洋食',cal:330,p:4,f:16,c:44},
-  {name:'とんかつ(1枚)',cat:'洋食',cal:480,p:28,f:28,c:28},
-  {name:'鶏むね肉(100g 皮なし)',cat:'肉魚',cal:116,p:23,f:1.9,c:0},
-  {name:'鶏もも肉(100g 皮なし)',cat:'肉魚',cal:127,p:19,f:5,c:0},
-  {name:'豚ロース(100g)',cat:'肉魚',cal:263,p:19,f:19,c:0.3},
-  {name:'豚バラ(100g)',cat:'肉魚',cal:395,p:14,f:35,c:0.2},
-  {name:'牛もも(100g)',cat:'肉魚',cal:182,p:21,f:10,c:0.4},
-  {name:'サーモン(100g)',cat:'肉魚',cal:204,p:20,f:13,c:0.1},
-  {name:'マグロ赤身(100g)',cat:'肉魚',cal:125,p:26,f:1.4,c:0.2},
-  {name:'えび(100g)',cat:'肉魚',cal:97,p:21,f:1,c:0.1},
-  {name:'ブロッコリー(100g)',cat:'野菜',cal:37,p:4.3,f:0.5,c:5.2},
-  {name:'キャベツ(100g)',cat:'野菜',cal:23,p:1.3,f:0.2,c:5.2},
-  {name:'トマト(1個 150g)',cat:'野菜',cal:29,p:1.1,f:0.1,c:5.6},
-  {name:'アボカド(半個 75g)',cat:'野菜',cal:134,p:1.5,f:12.5,c:3},
-  {name:'豆腐絹(半丁 150g)',cat:'野菜',cal:84,p:7.5,f:4.5,c:2.4},
-  {name:'枝豆(100g)',cat:'野菜',cal:135,p:11.5,f:6.1,c:8.8},
-  {name:'全卵(1個 60g)',cat:'乳製品',cal:91,p:7.4,f:6.2,c:0.2},
-  {name:'牛乳(200ml)',cat:'乳製品',cal:137,p:6.9,f:7.8,c:9.9},
-  {name:'ギリシャヨーグルト(100g)',cat:'乳製品',cal:59,p:10,f:0,c:4},
-  {name:'バナナ(1本 100g)',cat:'果物',cal:93,p:1.1,f:0.2,c:22.5},
-  {name:'りんご(半個 125g)',cat:'果物',cal:69,p:0.2,f:0.2,c:18.5},
-  {name:'みかん(1個 80g)',cat:'果物',cal:38,p:0.6,f:0.1,c:9},
-  {name:'ラーメン醤油(1杯)',cat:'外食',cal:520,p:20,f:12,c:84},
-  {name:'うどんかけ(1杯)',cat:'外食',cal:320,p:10,f:2,c:66},
-  {name:'牛丼吉野家(並)',cat:'外食',cal:652,p:22,f:18,c:96},
-  {name:'ケンタッキーチキン(1ピース)',cat:'外食',cal:280,p:18,f:16,c:14},
-  {name:'コンビニサラダチキン(1個)',cat:'コンビニ',cal:115,p:24,f:1.5,c:1},
-  {name:'コンビニおにぎり鮭',cat:'コンビニ',cal:185,p:6,f:2,c:35},
-  {name:'コンビニカップヌードル',cat:'コンビニ',cal:351,p:10,f:14,c:44},
-  {name:'コンビニ幕の内弁当',cat:'コンビニ',cal:680,p:22,f:18,c:102},
-  {name:'焼き肉定食(1人前)',cat:'定食',cal:820,p:36,f:28,c:104},
-  {name:'唐揚げ定食(1人前)',cat:'定食',cal:780,p:34,f:26,c:98},
-  {name:'とんかつ定食(1人前)',cat:'定食',cal:880,p:34,f:32,c:108},
-  {name:'ポテトチップス(1袋 60g)',cat:'お菓子',cal:323,p:3,f:20,c:32},
-  {name:'チョコレート(30g)',cat:'お菓子',cal:162,p:2,f:10,c:17},
-  {name:'アーモンド(20粒 25g)',cat:'お菓子',cal:148,p:5,f:13,c:4},
-  {name:'コーラ(500ml)',cat:'飲み物',cal:225,p:0,f:0,c:56},
-  {name:'カフェラテ(M)',cat:'飲み物',cal:120,p:5,f:5,c:13},
-  {name:'ブラックコーヒー(1杯)',cat:'飲み物',cal:5,p:0.3,f:0,c:0.7},
-  {name:'ホエイプロテイン(30g)',cat:'プロテイン',cal:120,p:24,f:1.5,c:3},
-  {name:'プロテインバー(1本)',cat:'プロテイン',cal:200,p:20,f:7,c:16},
-  {name:'ゆで鶏むね肉(100g)',cat:'プロテイン',cal:116,p:23,f:1.9,c:0}
+  {name:'白米',cat:'主食',unit:'g',defaultG:150,per100:{cal:168,p:2.5,f:0.3,c:37.1}},
+  {name:'玄米',cat:'主食',unit:'g',defaultG:150,per100:{cal:165,p:2.8,f:1.0,c:35.6}},
+  {name:'食パン(6枚切り1枚)',cat:'主食',unit:'serving',cal:158,p:5.6,f:2.6,c:28.0},
+  {name:'うどん(ゆで)',cat:'主食',unit:'g',defaultG:200,per100:{cal:105,p:2.6,f:0.4,c:21.6}},
+  {name:'そば(ゆで)',cat:'主食',unit:'g',defaultG:200,per100:{cal:132,p:4.8,f:0.5,c:25.8}},
+  {name:'パスタ(乾燥)',cat:'主食',unit:'g',defaultG:80,per100:{cal:358,p:12.6,f:1.5,c:71.8}},
+  {name:'オートミール',cat:'主食',unit:'g',defaultG:30,per100:{cal:350,p:13.0,f:6.0,c:63.0}},
+  {name:'親子丼(1杯)',cat:'和食',unit:'serving',cal:580,p:28,f:14,c:78},
+  {name:'カツ丼(1杯)',cat:'和食',unit:'serving',cal:780,p:30,f:22,c:102},
+  {name:'牛丼(並盛)',cat:'和食',unit:'serving',cal:640,p:20,f:18,c:96},
+  {name:'鮭おにぎり(1個)',cat:'和食',unit:'serving',cal:185,p:6,f:2,c:35},
+  {name:'ツナマヨおにぎり(1個)',cat:'和食',unit:'serving',cal:215,p:6,f:7,c:32},
+  {name:'味噌汁(1杯)',cat:'和食',unit:'serving',cal:35,p:2.5,f:1.5,c:3},
+  {name:'納豆(1パック 45g)',cat:'和食',unit:'serving',cal:85,p:7.4,f:4.5,c:5},
+  {name:'ゆで卵(1個)',cat:'和食',unit:'serving',cal:78,p:6.5,f:5,c:0.4},
+  {name:'焼き魚サバ',cat:'和食',unit:'g',defaultG:100,per100:{cal:202,p:20.6,f:12.1,c:0.3}},
+  {name:'唐揚げ(3個)',cat:'和食',unit:'serving',cal:340,p:24,f:20,c:15},
+  {name:'餃子(6個)',cat:'和食',unit:'serving',cal:300,p:14,f:12,c:32},
+  {name:'卵かけご飯(1杯)',cat:'和食',unit:'serving',cal:330,p:10,f:6,c:57},
+  {name:'ハンバーグ(1個)',cat:'洋食',unit:'serving',cal:350,p:18,f:22,c:18},
+  {name:'カレーライス(1皿)',cat:'洋食',unit:'serving',cal:720,p:18,f:18,c:112},
+  {name:'チャーハン(1皿)',cat:'洋食',unit:'serving',cal:580,p:16,f:18,c:86},
+  {name:'スパゲッティミートソース(1皿)',cat:'洋食',unit:'serving',cal:620,p:22,f:18,c:88},
+  {name:'ハンバーガー(1個)',cat:'洋食',unit:'serving',cal:460,p:18,f:20,c:52},
+  {name:'ビッグマック(1個)',cat:'洋食',unit:'serving',cal:525,p:26,f:26,c:45},
+  {name:'フライドポテト(M)',cat:'洋食',unit:'serving',cal:330,p:4,f:16,c:44},
+  {name:'とんかつ(1枚)',cat:'洋食',unit:'serving',cal:480,p:28,f:28,c:28},
+  {name:'鶏むね肉(皮なし)',cat:'肉魚',unit:'g',defaultG:100,per100:{cal:116,p:23.0,f:1.9,c:0}},
+  {name:'鶏もも肉(皮なし)',cat:'肉魚',unit:'g',defaultG:100,per100:{cal:127,p:19.0,f:5.0,c:0}},
+  {name:'豚ロース',cat:'肉魚',unit:'g',defaultG:100,per100:{cal:263,p:19.3,f:19.2,c:0.3}},
+  {name:'豚バラ',cat:'肉魚',unit:'g',defaultG:100,per100:{cal:395,p:14.2,f:35.4,c:0.2}},
+  {name:'牛もも',cat:'肉魚',unit:'g',defaultG:100,per100:{cal:182,p:21.3,f:10.7,c:0.4}},
+  {name:'サーモン',cat:'肉魚',unit:'g',defaultG:100,per100:{cal:204,p:20.1,f:13.4,c:0.1}},
+  {name:'マグロ赤身',cat:'肉魚',unit:'g',defaultG:100,per100:{cal:125,p:26.4,f:1.4,c:0.2}},
+  {name:'えび',cat:'肉魚',unit:'g',defaultG:100,per100:{cal:97,p:21.7,f:1.0,c:0.1}},
+  {name:'ブロッコリー',cat:'野菜',unit:'g',defaultG:100,per100:{cal:37,p:4.3,f:0.5,c:5.2}},
+  {name:'キャベツ',cat:'野菜',unit:'g',defaultG:100,per100:{cal:23,p:1.3,f:0.2,c:5.2}},
+  {name:'トマト',cat:'野菜',unit:'g',defaultG:150,per100:{cal:19,p:0.7,f:0.1,c:3.7}},
+  {name:'ミニトマト',cat:'野菜',unit:'g',defaultG:50,per100:{cal:30,p:1.1,f:0.1,c:7.2}},
+  {name:'アボカド',cat:'野菜',unit:'g',defaultG:75,per100:{cal:178,p:2.0,f:17.5,c:4.0}},
+  {name:'豆腐絹',cat:'野菜',unit:'g',defaultG:150,per100:{cal:56,p:5.0,f:3.0,c:1.6}},
+  {name:'豆腐木綿',cat:'野菜',unit:'g',defaultG:150,per100:{cal:73,p:6.7,f:4.5,c:1.6}},
+  {name:'枝豆',cat:'野菜',unit:'g',defaultG:100,per100:{cal:135,p:11.5,f:6.1,c:8.8}},
+  {name:'レタス',cat:'野菜',unit:'g',defaultG:50,per100:{cal:12,p:0.6,f:0.1,c:2.8}},
+  {name:'もやし',cat:'野菜',unit:'g',defaultG:100,per100:{cal:14,p:1.7,f:0.1,c:2.6}},
+  {name:'きゅうり',cat:'野菜',unit:'g',defaultG:100,per100:{cal:14,p:1.0,f:0.1,c:3.0}},
+  {name:'にんじん',cat:'野菜',unit:'g',defaultG:50,per100:{cal:39,p:0.7,f:0.2,c:9.3}},
+  {name:'大根',cat:'野菜',unit:'g',defaultG:100,per100:{cal:18,p:0.5,f:0.1,c:4.1}},
+  {name:'たまねぎ',cat:'野菜',unit:'g',defaultG:100,per100:{cal:37,p:1.0,f:0.1,c:8.8}},
+  {name:'じゃがいも',cat:'野菜',unit:'g',defaultG:100,per100:{cal:76,p:1.6,f:0.1,c:17.6}},
+  {name:'さつまいも',cat:'野菜',unit:'g',defaultG:100,per100:{cal:126,p:1.2,f:0.2,c:31.5}},
+  {name:'長ねぎ',cat:'野菜',unit:'g',defaultG:30,per100:{cal:28,p:1.4,f:0.1,c:6.5}},
+  {name:'ほうれん草',cat:'野菜',unit:'g',defaultG:80,per100:{cal:18,p:2.2,f:0.4,c:3.1}},
+  {name:'小松菜',cat:'野菜',unit:'g',defaultG:80,per100:{cal:13,p:1.5,f:0.2,c:2.4}},
+  {name:'ピーマン',cat:'野菜',unit:'g',defaultG:30,per100:{cal:20,p:0.9,f:0.2,c:5.1}},
+  {name:'パプリカ',cat:'野菜',unit:'g',defaultG:50,per100:{cal:30,p:1.0,f:0.2,c:7.2}},
+  {name:'なす',cat:'野菜',unit:'g',defaultG:80,per100:{cal:18,p:1.1,f:0.1,c:4.5}},
+  {name:'かぼちゃ',cat:'野菜',unit:'g',defaultG:100,per100:{cal:78,p:1.9,f:0.3,c:20.6}},
+  {name:'れんこん',cat:'野菜',unit:'g',defaultG:60,per100:{cal:66,p:1.9,f:0.1,c:15.5}},
+  {name:'ごぼう',cat:'野菜',unit:'g',defaultG:60,per100:{cal:58,p:1.8,f:0.1,c:15.4}},
+  {name:'白菜',cat:'野菜',unit:'g',defaultG:100,per100:{cal:13,p:0.8,f:0.1,c:3.2}},
+  {name:'セロリ',cat:'野菜',unit:'g',defaultG:50,per100:{cal:12,p:0.4,f:0.1,c:3.6}},
+  {name:'にら',cat:'野菜',unit:'g',defaultG:50,per100:{cal:18,p:1.7,f:0.3,c:4.0}},
+  {name:'ズッキーニ',cat:'野菜',unit:'g',defaultG:80,per100:{cal:14,p:1.3,f:0.1,c:2.8}},
+  {name:'チンゲン菜',cat:'野菜',unit:'g',defaultG:80,per100:{cal:9,p:0.6,f:0.1,c:2.0}},
+  {name:'オクラ',cat:'野菜',unit:'g',defaultG:50,per100:{cal:26,p:2.1,f:0.2,c:6.6}},
+  {name:'とうもろこし',cat:'野菜',unit:'g',defaultG:100,per100:{cal:92,p:3.6,f:1.7,c:16.8}},
+  {name:'えのき',cat:'野菜',unit:'g',defaultG:50,per100:{cal:22,p:2.7,f:0.2,c:3.7}},
+  {name:'しめじ',cat:'野菜',unit:'g',defaultG:50,per100:{cal:18,p:2.7,f:0.5,c:1.8}},
+  {name:'しいたけ',cat:'野菜',unit:'g',defaultG:30,per100:{cal:25,p:3.1,f:0.3,c:5.0}},
+  {name:'まいたけ',cat:'野菜',unit:'g',defaultG:50,per100:{cal:15,p:2.0,f:0.5,c:0.9}},
+  {name:'えりんぎ',cat:'野菜',unit:'g',defaultG:50,per100:{cal:19,p:2.6,f:0.4,c:4.0}},
+  {name:'長芋',cat:'野菜',unit:'g',defaultG:80,per100:{cal:64,p:2.2,f:0.3,c:13.9}},
+  {name:'こんにゃく',cat:'野菜',unit:'g',defaultG:100,per100:{cal:5,p:0.1,f:0,c:2.3}},
+  {name:'切り干し大根(乾)',cat:'野菜',unit:'g',defaultG:10,per100:{cal:280,p:9.7,f:0.8,c:64.5}},
+  {name:'ひじき(乾)',cat:'野菜',unit:'g',defaultG:5,per100:{cal:186,p:9.2,f:3.2,c:58.4}},
+  {name:'わかめ(乾)',cat:'野菜',unit:'g',defaultG:5,per100:{cal:138,p:18.0,f:1.6,c:42.2}},
+  {name:'たけのこ(水煮)',cat:'野菜',unit:'g',defaultG:80,per100:{cal:22,p:2.7,f:0.2,c:4.3}},
+  {name:'にんにく',cat:'野菜',unit:'g',defaultG:10,per100:{cal:129,p:6.4,f:0.9,c:27.5}},
+  {name:'しょうが',cat:'野菜',unit:'g',defaultG:10,per100:{cal:30,p:0.9,f:0.3,c:6.6}},
+  {name:'全卵(1個 60g)',cat:'乳製品',unit:'serving',cal:91,p:7.4,f:6.2,c:0.2},
+  {name:'牛乳(200ml)',cat:'乳製品',unit:'serving',cal:137,p:6.9,f:7.8,c:9.9},
+  {name:'低脂肪乳(200ml)',cat:'乳製品',unit:'serving',cal:92,p:7.6,f:1.0,c:11.0},
+  {name:'ギリシャヨーグルト',cat:'乳製品',unit:'g',defaultG:100,per100:{cal:59,p:10.0,f:0,c:4.0}},
+  {name:'プレーンヨーグルト',cat:'乳製品',unit:'g',defaultG:100,per100:{cal:62,p:3.6,f:3.0,c:4.9}},
+  {name:'無脂肪ヨーグルト',cat:'乳製品',unit:'g',defaultG:100,per100:{cal:42,p:4.0,f:0.1,c:5.7}},
+  {name:'カッテージチーズ',cat:'乳製品',unit:'g',defaultG:50,per100:{cal:99,p:13.3,f:4.5,c:1.9}},
+  {name:'スライスチーズ(1枚 18g)',cat:'乳製品',unit:'serving',cal:60,p:4.0,f:4.5,c:0.3},
+  {name:'カマンベールチーズ',cat:'乳製品',unit:'g',defaultG:20,per100:{cal:291,p:19.1,f:24.7,c:0.9}},
+  {name:'モッツァレラチーズ',cat:'乳製品',unit:'g',defaultG:30,per100:{cal:269,p:18.4,f:19.9,c:4.2}},
+  {name:'生クリーム',cat:'乳製品',unit:'g',defaultG:20,per100:{cal:433,p:1.9,f:45.0,c:2.9}},
+  {name:'カフェオレ(200ml)',cat:'乳製品',unit:'serving',cal:90,p:4.0,f:4.0,c:9.0},
+  {name:'バナナ',cat:'果物',unit:'g',defaultG:100,per100:{cal:93,p:1.1,f:0.2,c:22.5}},
+  {name:'りんご',cat:'果物',unit:'g',defaultG:125,per100:{cal:55,p:0.2,f:0.2,c:14.8}},
+  {name:'みかん(1個 80g)',cat:'果物',unit:'serving',cal:38,p:0.6,f:0.1,c:9},
+  {name:'いちご',cat:'果物',unit:'g',defaultG:150,per100:{cal:34,p:0.9,f:0.1,c:8.5}},
+  {name:'ぶどう',cat:'果物',unit:'g',defaultG:100,per100:{cal:59,p:0.4,f:0.1,c:15.7}},
+  {name:'キウイ(1個 100g)',cat:'果物',unit:'serving',cal:51,p:1.0,f:0.2,c:13.5},
+  {name:'桃(1個 200g)',cat:'果物',unit:'serving',cal:80,p:1.2,f:0.2,c:19.4},
+  {name:'梨',cat:'果物',unit:'g',defaultG:150,per100:{cal:43,p:0.3,f:0.1,c:11.3}},
+  {name:'柿(1個 180g)',cat:'果物',unit:'serving',cal:113,p:0.7,f:0.2,c:28.8},
+  {name:'パイナップル',cat:'果物',unit:'g',defaultG:100,per100:{cal:54,p:0.6,f:0.1,c:13.7}},
+  {name:'グレープフルーツ(1個 200g)',cat:'果物',unit:'serving',cal:76,p:1.8,f:0.2,c:18.0},
+  {name:'すいか',cat:'果物',unit:'g',defaultG:200,per100:{cal:41,p:0.6,f:0.1,c:9.5}},
+  {name:'メロン',cat:'果物',unit:'g',defaultG:150,per100:{cal:42,p:1.1,f:0.1,c:10.3}},
+  {name:'冷凍ブルーベリー',cat:'果物',unit:'g',defaultG:50,per100:{cal:54,p:0.5,f:0.3,c:12.9}},
+  {name:'ドライフルーツ(レーズン)',cat:'果物',unit:'g',defaultG:30,per100:{cal:324,p:2.7,f:0.2,c:80.7}},
+  {name:'ラーメン醤油(1杯)',cat:'外食',unit:'serving',cal:520,p:20,f:12,c:84},
+  {name:'うどんかけ(1杯)',cat:'外食',unit:'serving',cal:320,p:10,f:2,c:66},
+  {name:'牛丼吉野家(並)',cat:'外食',unit:'serving',cal:652,p:22,f:18,c:96},
+  {name:'ケンタッキーチキン(1ピース)',cat:'外食',unit:'serving',cal:280,p:18,f:16,c:14},
+  {name:'コンビニサラダチキン(1個)',cat:'コンビニ',unit:'serving',cal:115,p:24,f:1.5,c:1},
+  {name:'コンビニおにぎり鮭',cat:'コンビニ',unit:'serving',cal:185,p:6,f:2,c:35},
+  {name:'コンビニカップヌードル',cat:'コンビニ',unit:'serving',cal:351,p:10,f:14,c:44},
+  {name:'コンビニ幕の内弁当',cat:'コンビニ',unit:'serving',cal:680,p:22,f:18,c:102},
+  {name:'焼き肉定食(1人前)',cat:'定食',unit:'serving',cal:820,p:36,f:28,c:104},
+  {name:'唐揚げ定食(1人前)',cat:'定食',unit:'serving',cal:780,p:34,f:26,c:98},
+  {name:'とんかつ定食(1人前)',cat:'定食',unit:'serving',cal:880,p:34,f:32,c:108},
+  {name:'ポテトチップス(1袋 60g)',cat:'お菓子',unit:'serving',cal:323,p:3,f:20,c:32},
+  {name:'チョコレート(30g)',cat:'お菓子',unit:'serving',cal:162,p:2,f:10,c:17},
+  {name:'アーモンド(20粒 25g)',cat:'お菓子',unit:'serving',cal:148,p:5,f:13,c:4},
+  {name:'コーラ(500ml)',cat:'飲み物',unit:'serving',cal:225,p:0,f:0,c:56},
+  {name:'カフェラテ(M)',cat:'飲み物',unit:'serving',cal:120,p:5,f:5,c:13},
+  {name:'ブラックコーヒー(1杯)',cat:'飲み物',unit:'serving',cal:5,p:0.3,f:0,c:0.7},
+  {name:'ホエイプロテイン',cat:'プロテイン',unit:'g',defaultG:30,per100:{cal:400,p:80.0,f:5.0,c:10.0}},
+  {name:'プロテインバー(1本)',cat:'プロテイン',unit:'serving',cal:200,p:20,f:7,c:16},
+  {name:'ゆで鶏むね肉',cat:'プロテイン',unit:'g',defaultG:100,per100:{cal:116,p:23.0,f:1.9,c:0}}
 ];
 var CATS=['すべて','主食','和食','洋食','肉魚','野菜','乳製品','果物','外食','コンビニ','定食','お菓子','飲み物','プロテイン'];
 var EX_PRESETS=[
@@ -722,21 +790,62 @@ function dbSearch(q){
   if(items.length===0){el.innerHTML='<div class="db-no-result">見つかりませんでした</div>';return;}
   el.innerHTML='<div class="db-results-wrap">'+items.slice(0,15).map(function(f){
     var idx=FOOD_DB.indexOf(f);
-    return '<div class="db-result-item" onclick="selectDbFood('+idx+')"><div><div class="db-result-name">'+f.name+'</div><div class="db-result-meta">P '+f.p+'g F '+f.f+'g C '+f.c+'g</div></div><div class="db-result-cal">'+f.cal+'kcal</div></div>';
+    var v=calcFoodValues(f);
+    var metaLabel=f.unit==='g'?(f.defaultG+'g:'):'';
+    return '<div class="db-result-item" onclick="selectDbFood('+idx+')"><div><div class="db-result-name">'+f.name+'</div><div class="db-result-meta">'+metaLabel+' P '+v.p+'g F '+v.f+'g C '+v.c+'g</div></div><div class="db-result-cal">'+v.cal+'kcal</div></div>';
   }).join('')+'</div>';
+}
+function calcFoodValues(f,grams){
+  if(f.unit==='g'){
+    var g=(grams!=null&&grams>=0)?grams:f.defaultG;
+    var ratio=g/100;
+    return {
+      cal:Math.round(f.per100.cal*ratio),
+      p:Math.round(f.per100.p*ratio*10)/10,
+      f:Math.round(f.per100.f*ratio*10)/10,
+      c:Math.round(f.per100.c*ratio*10)/10,
+      grams:g
+    };
+  }
+  return {cal:f.cal,p:f.p,f:f.f,c:f.c};
 }
 function selectDbFood(idx){
   var f=FOOD_DB[idx];
-  document.getElementById('inName').value=f.name;
-  document.getElementById('inCal').value=f.cal;
-  document.getElementById('inP').value=f.p;
-  document.getElementById('inF').value=f.f;
-  document.getElementById('inC').value=f.c;
+  var isGram=f.unit==='g';
+  var v=calcFoodValues(f);
+  var displayName=isGram?(f.name+'('+v.grams+'g)'):f.name;
+  document.getElementById('inName').value=displayName;
+  document.getElementById('inCal').value=v.cal;
+  document.getElementById('inP').value=v.p;
+  document.getElementById('inF').value=v.f;
+  document.getElementById('inC').value=v.c;
   document.getElementById('dbResults').innerHTML='';
   document.getElementById('dbSelected').style.display='block';
-  document.getElementById('dbSelected').innerHTML='<div class="db-selected"><div class="db-selected-name">OK: '+f.name+'</div><div class="db-sel-grid"><div><div class="db-sel-val" style="color:var(--accent)">'+f.cal+'</div><div class="db-sel-label">kcal</div></div><div><div class="db-sel-val" style="color:var(--accent2)">'+f.p+'g</div><div class="db-sel-label">タンパク質</div></div><div><div class="db-sel-val" style="color:var(--amber)">'+f.f+'g</div><div class="db-sel-label">脂質</div></div><div><div class="db-sel-val" style="color:var(--blue)">'+f.c+'g</div><div class="db-sel-label">炭水化物</div></div></div></div>';
+  var gramRow=isGram?'<div class="db-sel-gram-row"><label>グラム数</label><div class="db-sel-gram-input-wrap"><input type="number" id="dbSelGrams" value="'+v.grams+'" min="1" step="1" inputmode="numeric" oninput="onDbGramsChange('+idx+')"><span>g</span></div></div>':'';
+  document.getElementById('dbSelected').innerHTML='<div class="db-selected" id="dbSelectedInner" data-idx="'+idx+'"><div class="db-selected-name">OK: '+f.name+'</div>'+gramRow+'<div class="db-sel-grid">'
+    +'<div><div class="db-sel-val" id="dbSelCal" style="color:var(--accent)">'+v.cal+'</div><div class="db-sel-label">kcal</div></div>'
+    +'<div><div class="db-sel-val" id="dbSelP" style="color:var(--accent2)">'+v.p+'g</div><div class="db-sel-label">タンパク質</div></div>'
+    +'<div><div class="db-sel-val" id="dbSelF" style="color:var(--amber)">'+v.f+'g</div><div class="db-sel-label">脂質</div></div>'
+    +'<div><div class="db-sel-val" id="dbSelC" style="color:var(--blue)">'+v.c+'g</div><div class="db-sel-label">炭水化物</div></div>'
+    +'</div></div>';
   showToast('値を反映しました');
   document.getElementById('inName').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function onDbGramsChange(idx){
+  var f=FOOD_DB[idx];
+  var gInput=document.getElementById('dbSelGrams');
+  var g=parseFloat(gInput.value);
+  if(isNaN(g)||g<0)g=0;
+  var v=calcFoodValues(f,g);
+  document.getElementById('dbSelCal').textContent=v.cal;
+  document.getElementById('dbSelP').textContent=v.p+'g';
+  document.getElementById('dbSelF').textContent=v.f+'g';
+  document.getElementById('dbSelC').textContent=v.c+'g';
+  document.getElementById('inName').value=f.name+'('+v.grams+'g)';
+  document.getElementById('inCal').value=v.cal;
+  document.getElementById('inP').value=v.p;
+  document.getElementById('inF').value=v.f;
+  document.getElementById('inC').value=v.c;
 }
 function setMode(mode){
   currentMode=mode;
@@ -746,18 +855,57 @@ function setMode(mode){
   });
   if(mode==='hist'){
     var scroll=document.getElementById('histScroll');
-    if(foodHistory.length===0){document.getElementById('modeHist').innerHTML='<div style="color:var(--text3);font-size:13px;padding:12px 0">まだ履歴がありません</div>';return;}
-    scroll.innerHTML=foodHistory.slice(0,15).map(function(f,i){return '<div class="hist-chip" onclick="selectHist('+i+')">'+f.name+'</div>';}).join('');
+    document.getElementById('histSelected').style.display='none';
+    if(foodHistory.length===0){scroll.innerHTML='<div style="color:var(--text3);font-size:13px;padding:12px 0">まだ履歴がありません</div>';return;}
+    scroll.innerHTML=foodHistory.slice(0,15).map(function(f,i){return '<div class="hist-chip" onclick="selectHist('+i+')">'+(f.baseName||f.name)+'</div>';}).join('');
   }
 }
 function selectHist(i){
   var f=foodHistory[i];
-  document.getElementById('inName').value=f.name;
-  document.getElementById('inCal').value=f.cal;
-  document.getElementById('inP').value=f.p;
-  document.getElementById('inF').value=f.f;
-  document.getElementById('inC').value=f.c;
+  var histEl=document.getElementById('histSelected');
+  if(f.unit==='g'&&f.per100){
+    var v=calcFoodValues(f);
+    var displayName=(f.baseName||f.name)+'('+v.grams+'g)';
+    document.getElementById('inName').value=displayName;
+    document.getElementById('inCal').value=v.cal;
+    document.getElementById('inP').value=v.p;
+    document.getElementById('inF').value=v.f;
+    document.getElementById('inC').value=v.c;
+    histEl.style.display='block';
+    histEl.innerHTML='<div class="db-selected" id="histSelectedInner" data-idx="'+i+'"><div class="db-selected-name">OK: '+(f.baseName||f.name)+'</div>'
+      +'<div class="db-sel-gram-row"><label>グラム数</label><div class="db-sel-gram-input-wrap"><input type="number" id="histSelGrams" value="'+v.grams+'" min="1" step="1" inputmode="numeric" oninput="onHistGramsChange('+i+')"><span>g</span></div></div>'
+      +'<div class="db-sel-grid">'
+      +'<div><div class="db-sel-val" id="histSelCal" style="color:var(--accent)">'+v.cal+'</div><div class="db-sel-label">kcal</div></div>'
+      +'<div><div class="db-sel-val" id="histSelP" style="color:var(--accent2)">'+v.p+'g</div><div class="db-sel-label">タンパク質</div></div>'
+      +'<div><div class="db-sel-val" id="histSelF" style="color:var(--amber)">'+v.f+'g</div><div class="db-sel-label">脂質</div></div>'
+      +'<div><div class="db-sel-val" id="histSelC" style="color:var(--blue)">'+v.c+'g</div><div class="db-sel-label">炭水化物</div></div>'
+      +'</div></div>';
+  }else{
+    histEl.style.display='none';
+    document.getElementById('inName').value=f.name;
+    document.getElementById('inCal').value=f.cal;
+    document.getElementById('inP').value=f.p;
+    document.getElementById('inF').value=f.f;
+    document.getElementById('inC').value=f.c;
+  }
   showToast('履歴から入力しました');
+  document.getElementById('inName').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function onHistGramsChange(i){
+  var f=foodHistory[i];
+  var gInput=document.getElementById('histSelGrams');
+  var g=parseFloat(gInput.value);
+  if(isNaN(g)||g<0)g=0;
+  var v=calcFoodValues(f,g);
+  document.getElementById('histSelCal').textContent=v.cal;
+  document.getElementById('histSelP').textContent=v.p+'g';
+  document.getElementById('histSelF').textContent=v.f+'g';
+  document.getElementById('histSelC').textContent=v.c+'g';
+  document.getElementById('inName').value=(f.baseName||f.name)+'('+v.grams+'g)';
+  document.getElementById('inCal').value=v.cal;
+  document.getElementById('inP').value=v.p;
+  document.getElementById('inF').value=v.f;
+  document.getElementById('inC').value=v.c;
 }
 
 function initExPresets(){
@@ -807,10 +955,11 @@ function switchPage(name,btn){
 }
 function openSheet(type){
   if(type==='meal'){
-    ['inName','inCal','inP','inF','inC'].forEach(function(id){document.getElementById(id).value='';});
+    ['inName','inCal','inP','inF','inC','inManualGrams'].forEach(function(id){document.getElementById(id).value='';});
     document.getElementById('dbInput').value='';
     document.getElementById('dbResults').innerHTML='';
     document.getElementById('dbSelected').style.display='none';
+    document.getElementById('histSelected').style.display='none';
     setMode('db');initCatChips();dbSearch('');
     document.getElementById('mealSheet').classList.add('open');
   }else if(type==='exercise'){
@@ -919,15 +1068,36 @@ function setViewWater(val){
 function addMeal(){
   var name=document.getElementById('inName').value.trim();
   if(!name){showToast('食品名を入力してください');return;}
-  var meal={id:Date.now(),name:name,time:document.getElementById('inTime').value,cal:parseFloat(document.getElementById('inCal').value)||0,p:parseFloat(document.getElementById('inP').value)||0,f:parseFloat(document.getElementById('inF').value)||0,c:parseFloat(document.getElementById('inC').value)||0};
+  var cal=parseFloat(document.getElementById('inCal').value)||0;
+  var p=parseFloat(document.getElementById('inP').value)||0;
+  var f=parseFloat(document.getElementById('inF').value)||0;
+  var c=parseFloat(document.getElementById('inC').value)||0;
+  var meal={id:Date.now(),name:name,time:document.getElementById('inTime').value,cal:cal,p:p,f:f,c:c};
   var arr=getViewMeals();
   arr=arr.concat([meal]);
   setViewMeals(arr);
-  if(!foodHistory.find(function(h){return h.name===name;})){
-    foodHistory.unshift({name:name,cal:meal.cal,p:meal.p,f:meal.f,c:meal.c});
-    if(foodHistory.length>50)foodHistory.pop();
-    saveHistory();
+
+  var histEntry=null;
+  if(currentMode==='manual'){
+    var gramsVal=parseFloat(document.getElementById('inManualGrams').value);
+    if(gramsVal&&gramsVal>0){
+      var ratio=100/gramsVal;
+      histEntry={
+        name:name,baseName:name,
+        unit:'g',defaultG:gramsVal,
+        per100:{cal:Math.round(cal*ratio),p:Math.round(p*ratio*10)/10,f:Math.round(f*ratio*10)/10,c:Math.round(c*ratio*10)/10},
+        cal:cal,p:p,f:f,c:c
+      };
+    }
   }
+  if(!histEntry)histEntry={name:name,baseName:name,cal:cal,p:p,f:f,c:c};
+
+  var existingIdx=foodHistory.findIndex(function(h){return (h.baseName||h.name)===(histEntry.baseName||histEntry.name);});
+  if(existingIdx>=0)foodHistory.splice(existingIdx,1);
+  foodHistory.unshift(histEntry);
+  if(foodHistory.length>50)foodHistory.pop();
+  saveHistory();
+
   closeSheet('meal');renderMeals();updateSummary();showToast('追加しました');
 }
 function deleteMeal(id){
@@ -1273,6 +1443,7 @@ function renderGoalPage(){
     +'<div class="goal-result-card"><div class="goal-result-label">タンパク質</div><div class="goal-result-val" style="color:var(--accent2)">'+r.p+'<span class="goal-result-unit">g</span></div></div>'
     +'<div class="goal-result-card"><div class="goal-result-label">脂質</div><div class="goal-result-val" style="color:var(--amber)">'+r.f+'<span class="goal-result-unit">g</span></div></div>'
     +'<div class="goal-result-card"><div class="goal-result-label">炭水化物</div><div class="goal-result-val" style="color:var(--blue)">'+r.c+'<span class="goal-result-unit">g</span></div></div></div>'
+    +'<div class="info-card"><div class="info-row"><span class="info-label">最終目標体重</span><span class="info-val" style="font-size:18px;color:var(--accent)">'+g.targetWeight.toFixed(1)+' kg</span></div><div class="info-row"><span class="info-label">現在の体重</span><span class="info-val">'+curW.toFixed(1)+' kg</span></div><div class="info-row"><span class="info-label">目標まで</span><span class="info-val">'+Math.max(0,(curW-g.targetWeight)).toFixed(1)+' kg</span></div></div>'
     +'<div class="info-card"><div class="info-row"><span class="info-label">落とす脂肪量</span><span class="info-val">'+r.fatToLose+' kg</span></div><div class="info-row"><span class="info-label">除脂肪体重</span><span class="info-val">'+r.lbm+' kg</span></div><div class="info-row"><span class="info-label">目標期間</span><span class="info-val">'+g.weeks+'週間</span></div><div class="info-row"><span class="info-label">活動量</span><span class="info-val">'+(activityLabels[g.activityLevel]||'')+'</span></div></div>'
     +'<button class="btn-secondary" onclick="openSheet(\'goal\')" style="margin-bottom:20px">目標を変更する</button>';
   if(!localStorage.getItem('goalStartDate'))localStorage.setItem('goalStartDate',todayStr());
