@@ -55,6 +55,11 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
 .field input::placeholder{color:var(--text3)}
 .field select option{background:var(--bg3)}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.name-suggest{position:absolute;top:100%;left:0;right:0;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);margin-top:4px;max-height:180px;overflow-y:auto;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.name-suggest-item{padding:11px 14px;font-size:14px;color:var(--text);cursor:pointer;border-bottom:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.name-suggest-item:last-child{border-bottom:none}
+.name-suggest-item:active{background:var(--bg4)}
+.name-suggest-meta{font-size:11px;color:var(--text2);flex-shrink:0;margin-left:8px}
 .btn-primary{width:100%;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);padding:15px;font-size:16px;font-weight:600;cursor:pointer;margin-top:6px}
 .btn-secondary{width:100%;background:var(--bg3);color:var(--text2);border:none;border-radius:var(--radius-sm);padding:14px;font-size:15px;cursor:pointer;margin-top:8px}
 .hist-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-bottom:12px}
@@ -419,7 +424,12 @@ body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height
       <div class="field"><label>グラム数（任意）</label><input type="number" id="inManualGrams" placeholder="例: 150" min="0" step="1" inputmode="numeric"></div>
       <div style="font-size:11px;color:var(--text3);margin-bottom:8px">入力すると次回以降、量を変えて自動計算できます</div>
     </div>
-    <div class="field"><label>食品名</label><input type="text" id="inName" placeholder="例: 鶏むね肉 100g"></div>
+    <div class="field" style="position:relative">
+      <label>食品名</label>
+      <input type="text" id="inName" placeholder="例: 鶏むね肉 100g" autocomplete="off" oninput="onNameInput()" onfocus="onNameInput()" onblur="setTimeout(hideNameSuggest,150)">
+      <div id="nameSuggest" class="name-suggest" style="display:none"></div>
+    </div>
+    <div id="nameGramAdjust" style="display:none;margin-bottom:14px"></div>
     <div class="field-row">
       <div class="field"><label>タイミング</label><select id="inTime"><option value="朝食">朝食</option><option value="昼食">昼食</option><option value="夕食">夕食</option><option value="間食">間食</option></select></div>
       <div class="field"><label>カロリー (kcal)</label><input type="number" id="inCal" placeholder="0" min="0" inputmode="decimal"></div>
@@ -811,6 +821,9 @@ function calcFoodValues(f,grams){
 }
 function selectDbFood(idx){
   var f=FOOD_DB[idx];
+  document.getElementById('nameGramAdjust').style.display='none';
+  document.getElementById('nameGramAdjust').innerHTML='';
+  hideNameSuggest();
   var isGram=f.unit==='g';
   var v=calcFoodValues(f);
   var displayName=isGram?(f.name+'('+v.grams+'g)'):f.name;
@@ -863,6 +876,9 @@ function setMode(mode){
 function selectHist(i){
   var f=foodHistory[i];
   var histEl=document.getElementById('histSelected');
+  document.getElementById('nameGramAdjust').style.display='none';
+  document.getElementById('nameGramAdjust').innerHTML='';
+  hideNameSuggest();
   if(f.unit==='g'&&f.per100){
     var v=calcFoodValues(f);
     var displayName=(f.baseName||f.name)+'('+v.grams+'g)';
@@ -901,6 +917,82 @@ function onHistGramsChange(i){
   document.getElementById('histSelP').textContent=v.p+'g';
   document.getElementById('histSelF').textContent=v.f+'g';
   document.getElementById('histSelC').textContent=v.c+'g';
+  document.getElementById('inName').value=(f.baseName||f.name)+'('+v.grams+'g)';
+  document.getElementById('inCal').value=v.cal;
+  document.getElementById('inP').value=v.p;
+  document.getElementById('inF').value=v.f;
+  document.getElementById('inC').value=v.c;
+}
+
+function onNameInput(){
+  var box=document.getElementById('nameSuggest');
+  var q=document.getElementById('inName').value.trim().toLowerCase();
+  if(!q){box.style.display='none';box.innerHTML='';return;}
+  var matches=[];
+  for(var i=0;i<foodHistory.length;i++){
+    var f=foodHistory[i];
+    var label=f.baseName||f.name;
+    if(label.toLowerCase().indexOf(q)>=0){matches.push({f:f,idx:i,label:label});}
+    if(matches.length>=6)break;
+  }
+  if(matches.length===0){box.style.display='none';box.innerHTML='';return;}
+  box.innerHTML=matches.map(function(m){
+    var meta;
+    if(m.f.unit==='g'&&m.f.per100){
+      var v=calcFoodValues(m.f);
+      meta=v.grams+'g '+v.cal+'kcal';
+    }else{
+      meta=m.f.cal+'kcal';
+    }
+    return '<div class="name-suggest-item" onclick="selectNameSuggest('+m.idx+')"><span>'+m.label+'</span><span class="name-suggest-meta">'+meta+'</span></div>';
+  }).join('');
+  box.style.display='block';
+}
+function hideNameSuggest(){
+  document.getElementById('nameSuggest').style.display='none';
+}
+function selectNameSuggest(i){
+  var f=foodHistory[i];
+  hideNameSuggest();
+  document.getElementById('histSelected').style.display='none';
+  var adjustEl=document.getElementById('nameGramAdjust');
+  if(f.unit==='g'&&f.per100){
+    var v=calcFoodValues(f);
+    document.getElementById('inName').value=(f.baseName||f.name)+'('+v.grams+'g)';
+    document.getElementById('inCal').value=v.cal;
+    document.getElementById('inP').value=v.p;
+    document.getElementById('inF').value=v.f;
+    document.getElementById('inC').value=v.c;
+    adjustEl.style.display='block';
+    adjustEl.innerHTML='<div class="db-selected" data-idx="'+i+'"><div class="db-selected-name">OK: '+(f.baseName||f.name)+'</div>'
+      +'<div class="db-sel-gram-row"><label>グラム数</label><div class="db-sel-gram-input-wrap"><input type="number" id="nameSelGrams" value="'+v.grams+'" min="1" step="1" inputmode="numeric" oninput="onNameGramsChange('+i+')"><span>g</span></div></div>'
+      +'<div class="db-sel-grid">'
+      +'<div><div class="db-sel-val" id="nameSelCal" style="color:var(--accent)">'+v.cal+'</div><div class="db-sel-label">kcal</div></div>'
+      +'<div><div class="db-sel-val" id="nameSelP" style="color:var(--accent2)">'+v.p+'g</div><div class="db-sel-label">タンパク質</div></div>'
+      +'<div><div class="db-sel-val" id="nameSelF" style="color:var(--amber)">'+v.f+'g</div><div class="db-sel-label">脂質</div></div>'
+      +'<div><div class="db-sel-val" id="nameSelC" style="color:var(--blue)">'+v.c+'g</div><div class="db-sel-label">炭水化物</div></div>'
+      +'</div></div>';
+  }else{
+    adjustEl.style.display='none';
+    adjustEl.innerHTML='';
+    document.getElementById('inName').value=f.name;
+    document.getElementById('inCal').value=f.cal;
+    document.getElementById('inP').value=f.p;
+    document.getElementById('inF').value=f.f;
+    document.getElementById('inC').value=f.c;
+  }
+  showToast('履歴から入力しました');
+}
+function onNameGramsChange(i){
+  var f=foodHistory[i];
+  var gInput=document.getElementById('nameSelGrams');
+  var g=parseFloat(gInput.value);
+  if(isNaN(g)||g<0)g=0;
+  var v=calcFoodValues(f,g);
+  document.getElementById('nameSelCal').textContent=v.cal;
+  document.getElementById('nameSelP').textContent=v.p+'g';
+  document.getElementById('nameSelF').textContent=v.f+'g';
+  document.getElementById('nameSelC').textContent=v.c+'g';
   document.getElementById('inName').value=(f.baseName||f.name)+'('+v.grams+'g)';
   document.getElementById('inCal').value=v.cal;
   document.getElementById('inP').value=v.p;
@@ -960,6 +1052,10 @@ function openSheet(type){
     document.getElementById('dbResults').innerHTML='';
     document.getElementById('dbSelected').style.display='none';
     document.getElementById('histSelected').style.display='none';
+    document.getElementById('nameGramAdjust').style.display='none';
+    document.getElementById('nameGramAdjust').innerHTML='';
+    document.getElementById('nameSuggest').style.display='none';
+    document.getElementById('nameSuggest').innerHTML='';
     setMode('db');initCatChips();dbSearch('');
     document.getElementById('mealSheet').classList.add('open');
   }else if(type==='exercise'){
